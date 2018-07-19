@@ -1,0 +1,214 @@
+@startuml
+
+package "World" {
+
+class Entity {
+- glm::vec3 position, rotation, scale;
+
++ glm::mat4 getModelMatrix()
++ {abstract} void update(const int &delta)
++ {abstract} void render()
+}
+
+class MovingEntity {
+
+}
+
+class World {
+- std::vector<std::unique_ptr<Entity>> _entities
++ void addEntity(Entity *e)
++ void removeEntity(Entity *e)
++ const std::vector<std::unique_ptr<Entity>> &getEntities()
++ void update(const int delta)
+}
+
+World --> "*" Entity
+Entity <|-- MovingEntity
+
+}
+
+package "Render" {
+
+class VertexData {
++ unsigned int vertexSize, indiceSize, colorSize, textureSize;
++ std::vector<glm::vec3> vertices;
++ std::vector<unsigned int> indices;
+}
+
+class Vertex {
+- bool _initialized;
+- unsigned int _vbo, _ebo;
+- std::unique_ptr<VertexData> _data;
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ void deleteBuffers(std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ bool isInitialized();
++ const unsigned int &getVbo() const;
++ void setVbo(unsigned int v);
++ const std::vector<glm::vec3> &getVertices() const;
++ unsigned long getVerticesSize() const;
++ unsigned long getIndiceSize() const;
+}
+
+class TextureImage {
++ GLuint texture;
++ int width, height;
++ std::vector<unsigned char> imageData;
++ GLint internalFormat;
++ GLenum imageFormat;
+}
+
+class Texture {
+- std::vector<std::unique_ptr<TextureImage>> _textures;
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ void addTexture(TextureImage *texture);
++ std::vector<std::unique_ptr<TextureImage>> &getTextures();
+- void initializeTexture(std::unique_ptr<TextureImage> &textureData,
+                         std::shared_ptr<OpenGLFunctionProxy> &proxy,
+                         GLuint programId,
+                         int index, std::string name);
+}
+
+class Material {
+- bool _initialized;
+- GLint u_ambient, u_diffuse, u_specular;
+- float power;
+- glm::vec3 _ambientColor, _diffuseColor, _specularColor;
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ bool isInitialized();
++ GLint getUniformAmbient() const;
++ GLint getUniformDiffuse() const;
++ GLint getUniformSpecular() const;
+}
+
+class Mesh {
+- bool _initialized;
+- GLuint _vao;
+- std::unique_ptr<Vertex> _vertex;
+- std::unique_ptr<Texture> _texture;
+- std::shared_ptr<Material> _material;
+
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ bool isInitialized();
++ void setVao(GLuint vao);
++ GLuint getVao();
++ void setVertex(Vertex *v);
++ std::unique_ptr<Vertex> &getVertex();
++ void setTexture(Texture *t);
++ std::unique_ptr<Texture> &getTexture();
++ void setMaterial(Material *m);
++ std::shared_ptr<Material> &getMaterial();
+}
+
+class RenderObject {
+- bool _initialized
+- std::unique_ptr<Mesh> _mesh
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy)
++ bool isInitialized()
++ std::unique_ptr<Mesh> &getMesh()
++ void render(GLuint programId, 
+		std::shared_ptr<OpenGLFunctionProxy> &proxy)
+}
+
+class ShaderInformation {
+- GLuint positionAttribute, colorAttribute, matrixUniform;
+- std::string vertexSource, fragmentSource;
+
++ void setPositionAttribute(GLuint attr);
++ void setColorAttribute(GLuint attr);
++ void setMatrixUniform(GLuint m);
++ GLuint getPositionAttribute();
++ GLuint getColorAttribute();
++ GLuint getMatrixUniform();
++ std::string getVertexSource();
++ std::string getFragmentSource();
+}
+
+class Shader {
+- GLuint vertexShader, fragmentShader;
+- std::unique_ptr<ShaderInformation> shaderInformation;
+- void initializeVertexShader(std::shared_ptr<OpenGLFunctionProxy> &proxy);
+- void initializeFragmentShader(std::shared_ptr<OpenGLFunctionProxy> &proxy);
+- void initializeShader(std::shared_ptr<OpenGLFunctionProxy> &proxy, 
+			std::string shaderSource, 
+			GLuint &shader, 
+			GLenum shaderType);
+- void checkCompilationStatus(GLuint shader, 
+				GLenum type, 
+				std::shared_ptr<OpenGLFunctionProxy> &proxy);
+
++ void initialize(std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ GLuint getVertexShader();
++ GLuint getFragmentShader();
+}
+
+class Camera {
+- float _roll, _pitch, _yaw, _fov, _near, _far;
+- glm::vec3 _position;
+- glm::mat4 _view, _projection;
+
++ void initialize(GLuint programId, 
+		    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ void addToPosition(glm::vec3 delta);
++ glm::mat4 &getViewMatrix();
++ glm::mat4 &updateViewMatrix();
++ glm::mat4 &getProjectionMatrix();
++ glm::mat4 &updateProjectionMatrix(const int width, const int height);
++ float getFov();
++ void setUniformProjection(GLuint programId, 
+			    std::shared_ptr<OpenGLFunctionProxy> &proxy);
++ void setUniformView(GLuint programId, 
+			std::shared_ptr<OpenGLFunctionProxy> &proxy);
+}
+
+class Renderer {
+- bool _initialized;
+- GLuint _program;
+- std::unique_ptr<Shader> _shader;
+- std::unique_ptr<Camera> _camera;
+- std::shared_ptr<OpenGLFunctionProxy> _proxy;
+
++ bool hasFunctions();
++ void setFunctions(std::shared_ptr<OpenGLFunctionProxy> &f);
++ void initialize();
++ void initializeRenderObjects(std::unique_ptr<World<RenderableEntity>> &world);
++ void addShader(Shader *_shader);
++ void render(std::unique_ptr<World<RenderableEntity> > &world);
++ void renderEntity(const std::unique_ptr<RenderableEntity> &entity, std::unique_ptr<Camera> &camera);
++ std::unique_ptr<Camera> &getCamera();
+}
+
+class RenderableEntity {
+- std::unique_ptr<Entity> entity;
+- std::unique_ptr<RenderObject> renderObject;
+
++ std::unique_ptr<Entity> &getEntity();
++ std::unique_ptr<RenderObject> &getRenderObject();
++ void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
+}
+
+Texture --> "*" TextureImage
+Vertex --> VertexData
+Mesh --> Vertex
+Mesh --> Texture
+Mesh --> Material
+RenderObject --> Mesh
+RenderableEntity --> RenderObject
+Shader --> ShaderInformation
+Renderer --> Shader
+Renderer --> Camera
+Renderer ..> "Use" RenderableEntity
+}
+
+RenderableEntity --> Entity
+Renderer ..> "Render Entities and World" World
+@enduml
