@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include "vertexlocation.h"
 
 Mesh::Mesh()
 {

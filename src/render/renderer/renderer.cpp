@@ -7,7 +7,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "renderobject.h"
-#include "vertexlocation.h"
 #include "shader/shaderinformation.h"
 
 Renderer::Renderer(Camera *c) :

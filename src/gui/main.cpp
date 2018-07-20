@@ -2,9 +2,6 @@
 #include "qtopenglproxy.h"
 #include "movingentity.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include <QApplication>
 #include <QFile>
 #include <QTimer>

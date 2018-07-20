@@ -1,5 +1,4 @@
 #include "vertex.h"
-#include "vertexlocation.h"
 
 Vertex::Vertex(VertexData *data) :
   _initialized(false)
