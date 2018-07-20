@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QOpenGLFunctions_4_3_Core>
+#include <QResizeEvent>
 #include <QtDebug>
 
 #include "glm/gtc/matrix_transform.hpp"
@@ -9,14 +10,25 @@
 #include "shader/shader.h"
 #include "shader/shaderinformation.h"
 
-OpenGLWindow::OpenGLWindow(QSurfaceFormat f) :
-  format(f)
+OpenGLWindow::OpenGLWindow(QSurfaceFormat f, QWindow *parent) :
+  QWindow (parent)
 {
+  this->setSurfaceType(QWindow::OpenGLSurface);
+  this->setFormat(f);
+  this->create();
+  this->_lastNanos = 0;
 }
 
 OpenGLWindow::~OpenGLWindow()
 {
-  this->makeCurrent();
+  this->openglContext->makeCurrent(this);
+}
+
+void OpenGLWindow::initialize()
+{
+  this->initializeFunctionProxy();
+  this->initializeShader();
+  this->initializeTimer();
 }
 
 void OpenGLWindow::setWorld(World<RenderableEntity> *world)
@@ -29,52 +41,34 @@ void OpenGLWindow::setRenderer(Renderer *renderer)
   this->renderer = std::unique_ptr<Renderer>(renderer);
 }
 
-void OpenGLWindow::initializeGL()
+void OpenGLWindow::update()
 {
-  this->initializeFunctionProxy();
-  char *version = (char *) this->functions->glGetString(GL_VERSION);
-  char *glslVersion = (char *) this->functions->glGetString(GL_SHADING_LANGUAGE_VERSION);
-  qDebug() << "Initialized with OpenGL version:"
-           << version
-           << "GLSL:"
-           << glslVersion;
+  long long elapsed = this->_elapsedTimer->nsecsElapsed();
+  double deltaSeconds = static_cast<double>(elapsed - this->_lastNanos) / 1000000000;
 
-  this->functions->glViewport(0, 0, this->width(), this->height());
+  qDebug() << "Updating with delta: " << deltaSeconds;
+  this->world->update(deltaSeconds);
+  this->_lastNanos = elapsed;
 }
 
-void OpenGLWindow::resizeGL(int w, int h)
+void OpenGLWindow::render()
 {
-  qDebug() << "Resizing OpenGL window...";
-  if (this->world) {
-    this->renderer->getCamera()->updateViewMatrix();
-    this->renderer->getCamera()->updateProjectionMatrix(w, h);
-  }
-  this->functions->glViewport(0, 0, this->width(), this->height());
-}
-
-void OpenGLWindow::paintGL()
-{
-
-  bool isInitialized = this->renderer && this->functions;
-
-  if (isInitialized && this->running) {
-    char *version = (char *) this->functions->glGetString(GL_VERSION);
-    char *glslVersion = (char *) this->functions->glGetString(GL_SHADING_LANGUAGE_VERSION);
-    qDebug() << "Rendering with OpenGL version:"
-             << version
-             << "GLSL:"
-             << glslVersion;
+  if (isExposed()) {
+    this->openglContext->makeCurrent(this);
     this->renderer->render(this->world);
+    this->openglContext->swapBuffers(this);
   }
 }
 
 void OpenGLWindow::initializeFunctionProxy()
 {
   // Get current OpenGL context.
-  this->context()->setFormat(this->format);
-  if(this->context()->create()) {
-    this->context()->makeCurrent(this);
-    QOpenGLFunctions_4_3_Core *f = this->context()->versionFunctions<QOpenGLFunctions_4_3_Core>();
+  this->openglContext = std::make_unique<QOpenGLContext>(this);
+  this->openglContext->setFormat(this->requestedFormat());
+  bool created = this->openglContext->create();
+  if(created) {
+    this->openglContext->makeCurrent(this);
+    QOpenGLFunctions_4_3_Core *f = this->openglContext->versionFunctions<QOpenGLFunctions_4_3_Core>();
     if(!f) {
       qWarning() << "Could not get the version functions...";
     }
@@ -83,12 +77,13 @@ void OpenGLWindow::initializeFunctionProxy()
     if (!this->renderer->hasFunctions()) {
       this->renderer->setFunctions(this->functions);
     }
-    this->initializeShader();
-    QTimer *t = new QTimer(this);
-    this->timer = std::unique_ptr<QTimer>(t);
-    this->connect(t, SIGNAL(timeout()), this, SLOT(update()));
-    this->timer->start(0);
-    this->running = true;
+
+    const char *glVersion = (const char *) this->functions->glGetString(GL_VERSION),
+                *glslVersion = (const char *) this->functions->glGetString(GL_SHADING_LANGUAGE_VERSION);
+    qDebug() << "Initialized OpenGL with version:"
+             << glVersion
+             << "GLSL:"
+             << glslVersion;
   }
 }
 
@@ -116,13 +111,25 @@ void OpenGLWindow::initializeShader()
   );
 }
 
-//bool OpenGLWindow::event(QEvent *event)
-//{
-//  switch(event->type()) {
-//  case QEvent::UpdateRequest:
-//    update();
-//    return true;
-//  default:
-//    return QOpenGLWindow::event(event);
-//  }
-//}
+void OpenGLWindow::initializeTimer()
+{
+  this->_renderTimer = std::make_unique<QTimer>(this);
+  this->_updateTimer = std::make_unique<QTimer>(this);
+  this->_elapsedTimer = std::make_unique<QElapsedTimer>();
+
+  this->connect(this->_updateTimer.get(), SIGNAL(timeout()), this, SLOT(update()));
+  this->connect(this->_renderTimer.get(), SIGNAL(timeout()), this, SLOT(render()));
+
+  this->_updateTimer->start();
+  this->_renderTimer->start();
+  this->_elapsedTimer->start();
+}
+
+void OpenGLWindow::resizeEvent(QResizeEvent *e)
+{
+  int width = e->size().width(),
+      height = e->size().height();
+  this->functions->glViewport(0, 0, width, height);
+  this->renderer->getCamera()->updateViewMatrix();
+  this->renderer->getCamera()->updateProjectionMatrix(width, height);
+}

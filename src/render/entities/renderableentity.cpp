@@ -20,3 +20,8 @@ void RenderableEntity::render(GLuint programId, std::shared_ptr<OpenGLFunctionPr
 {
   this->renderObject->render(programId, proxy);
 }
+
+void RenderableEntity::update(const double &delta)
+{
+  this->entity->update(delta);
+}

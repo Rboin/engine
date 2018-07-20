@@ -10,12 +10,7 @@ MovingEntity::~MovingEntity()
 
 }
 
-void MovingEntity::update(const int &delta)
-{
-
-}
-
-void MovingEntity::render()
+void MovingEntity::update(const double &delta)
 {
 
 }

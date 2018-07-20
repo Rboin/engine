@@ -178,6 +178,7 @@ int main(int argc, char **argv)
   format.setVersion(4, 3);
   format.setRenderableType(QSurfaceFormat::OpenGL);
   format.setProfile(QSurfaceFormat::CoreProfile);
+  format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
   format.setSamples(4);
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(format);
@@ -187,6 +188,7 @@ int main(int argc, char **argv)
   window.setRenderer(new Renderer(camera));
   window.setHeight(600);
   window.setWidth(800);
+  window.initialize();
   window.show();
 
   return app.exec();

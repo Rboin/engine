@@ -7,12 +7,11 @@ class MovingEntity : public Entity
 {
 public:
   MovingEntity();
-  ~MovingEntity();
+  ~MovingEntity() override;
 
   // Entity interface
 public:
-  void update(const int &delta) override;
-  void render() override;
+  void update(const double &delta) override;
 };
 
 #endif // MOVINGENTITY_H

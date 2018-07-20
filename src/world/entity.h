@@ -11,8 +11,7 @@ public:
 
   glm::mat4 getModelMatrix();
 
-  virtual void update(const int &delta) = 0;
-  virtual void render() = 0;
+  virtual void update(const double &delta) = 0;
 
 protected:
   glm::vec4 position;

@@ -43,7 +43,7 @@ public:
     return this->entities;
   }
 
-  void update(const int delta)
+  void update(const double &delta)
   {
     typename std::vector<std::unique_ptr<T>>::iterator it;
     for (it = this->entities.begin(); it != this->entities.end(); it++) {
