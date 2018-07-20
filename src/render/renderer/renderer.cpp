@@ -91,13 +91,13 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
     this->_proxy->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     this->_proxy->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     this->_proxy->glUseProgram(this->_program);
-    this->_camera->setUniformView(this->_program, this->_proxy);
-    this->_camera->setUniformProjection(this->_program, this->_proxy);
+
+    glm::mat4 viewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
     const std::vector<std::unique_ptr<RenderableEntity>> &v = world->getEntities();
     std::vector<std::unique_ptr<RenderableEntity>>::const_iterator iter;
     for(iter = v.begin(); iter != v.end(); ++iter) {
       const std::unique_ptr<RenderableEntity> &entity = (*iter);
-      entity->render(this->_program, this->_proxy);
+      entity->render(this->_program, this->_proxy, viewProjection);
     }
     this->_proxy->glUseProgram(0);
   }

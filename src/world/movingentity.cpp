@@ -12,5 +12,5 @@ MovingEntity::~MovingEntity()
 
 void MovingEntity::update(const double &delta)
 {
-
+  Entity::update(delta);
 }

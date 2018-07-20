@@ -47,6 +47,7 @@ void OpenGLWindow::update()
   double deltaSeconds = static_cast<double>(elapsed - this->_lastNanos) / 1000000000;
 
   qDebug() << "Updating with delta: " << deltaSeconds;
+  this->renderer->getCamera()->update(deltaSeconds);
   this->world->update(deltaSeconds);
   this->_lastNanos = elapsed;
 }
@@ -132,4 +133,39 @@ void OpenGLWindow::resizeEvent(QResizeEvent *e)
   this->functions->glViewport(0, 0, width, height);
   this->renderer->getCamera()->updateViewMatrix();
   this->renderer->getCamera()->updateProjectionMatrix(width, height);
+  this->_center = this->mapToGlobal(QPoint(this->width()/2, this->height()/2));
+}
+
+void OpenGLWindow::keyPressEvent(QKeyEvent *e)
+{
+  glm::vec3 buffer = glm::vec3(0.0f, 0.0f, 0.0f);
+  switch(e->key()) {
+  case Qt::Key_W:
+    buffer += glm::vec3(0.0f, 0.0f, -1.0f);
+    break;
+  case Qt::Key_S:
+    buffer += glm::vec3(0.0f, 0.0f, 1.0f);
+    break;
+  case Qt::Key_A:
+    buffer += glm::vec3(-1.0f, 0.0f, 0.0f);
+    break;
+  case Qt::Key_D:
+    buffer += glm::vec3(1.0f, 0.0f, 0.0f);
+    break;
+  }
+  this->renderer->getCamera()->addToMovementBuffer(buffer);
+}
+
+void OpenGLWindow::mouseMoveEvent(QMouseEvent *e)
+{
+  // TODO: Fix camera movement (FPS camera)
+  QPointF point = e->pos();
+  float deltaX = point.x() - this->_center.x(),
+        deltaY = point.y() - this->_center.y();
+  float sensitivity = 0.05;
+  glm::vec3 delta = glm::vec3(deltaX, deltaY, 0.0f);
+  delta *= sensitivity;
+  this->renderer->getCamera()->addToRotationBuffer(delta);
+
+  QCursor::setPos(this->_center);
 }

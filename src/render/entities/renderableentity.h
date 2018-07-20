@@ -13,7 +13,7 @@ public:
   std::unique_ptr<Entity> &getEntity();
   std::unique_ptr<RenderObject> &getRenderObject();
 
-  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
+  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &viewProjectionMatrix);
 
   // Entity interface
 public:

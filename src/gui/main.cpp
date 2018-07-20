@@ -184,7 +184,7 @@ int main(int argc, char **argv)
   OpenGLWindow window(format);
   window.setWorld(createWorld());
   Camera *camera = new Camera(45.0f, 0.1f, 100.0f);
-  camera->addToPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+  camera->addToMovementBuffer(glm::vec3(0.0f, 0.0f, 3.0f));
   window.setRenderer(new Renderer(camera));
   window.setHeight(600);
   window.setWidth(800);

@@ -7,13 +7,10 @@ in vec3 textureCoordinate;
 out vec3 color;
 out vec2 texCoordinate;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 MVP;
 
 void main()
 {
-   mat4 MVP = projection * view * model;
    gl_Position = MVP * vec4(position, 1.0f);
    color = inColor;
    texCoordinate = vec2(textureCoordinate.x, textureCoordinate.y);

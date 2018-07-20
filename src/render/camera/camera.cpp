@@ -6,7 +6,9 @@
 Camera::Camera(float fov, float near, float far):
   _roll(0), _pitch(0), _yaw(0),
   _fov(fov), _near(near), _far(far),
-  _position(glm::vec3(0,0,0))
+  _position(glm::vec3(0.0f)),
+  _moveBuffer(glm::vec3(0.0f)),
+  _rotateBuffer(glm::vec3(0.0f))
 {
   this->updateViewMatrix();
 }
@@ -17,10 +19,29 @@ void Camera::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
   this->setUniformProjection(programId, proxy);
 }
 
-void Camera::addToPosition(glm::vec3 delta)
+void Camera::update(const float &delta)
 {
-  this->_position += delta;
+  glm::vec3 velocity = this->_moveBuffer * delta;
+  glm::vec3 rotateVelocity = this->_rotateBuffer * delta;
+
+  this->_position += velocity;
+  this->_yaw += rotateVelocity.x;
+  this->_pitch += rotateVelocity.y;
   this->updateViewMatrix();
+
+  this->_moveBuffer = glm::vec3(0.0f);
+  this->_rotateBuffer = glm::vec3(0.0f);
+}
+
+
+void Camera::addToMovementBuffer(const glm::vec3 &delta)
+{
+  this->_moveBuffer += delta;
+}
+
+void Camera::addToRotationBuffer(const glm::vec3 &delta)
+{
+  this->_rotateBuffer += delta;
 }
 
 glm::mat4 &Camera::getViewMatrix()
@@ -30,6 +51,13 @@ glm::mat4 &Camera::getViewMatrix()
 
 glm::mat4 &Camera::updateViewMatrix()
 {
+  if(this->_pitch > 89.0f) {
+    this->_pitch = 89.0f;
+  }
+  if(this->_pitch < -89.0f) {
+    this->_pitch = -89.0f;
+  }
+
   glm::mat4 roll(1.0f), pitch(1.0f), yaw(1.0f);
   roll = glm::rotate(roll, glm::radians(this->_roll), glm::vec3(0, 0, 1));
   pitch = glm::rotate(pitch, glm::radians(this->_pitch), glm::vec3(1, 0, 0));

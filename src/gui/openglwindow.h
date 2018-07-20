@@ -27,8 +27,8 @@ public slots:
   void update();
   void render();
 private:
-
   long long _lastNanos;
+  QPoint _center;
 
   std::unique_ptr<QTimer> _updateTimer, _renderTimer;
   std::unique_ptr<QElapsedTimer> _elapsedTimer;
@@ -41,13 +41,11 @@ private:
   void initializeShader();
   void initializeTimer();
 
-  // QObject interface
-public:
-//  bool event(QEvent *event) Q_DECL_OVERRIDE;
-
   // QWindow interface
 protected:
   void resizeEvent(QResizeEvent *) override;
+  void keyPressEvent(QKeyEvent *) override;
+  void mouseMoveEvent(QMouseEvent *) override;
 };
 
 #endif // OPENGLWIDGET_H

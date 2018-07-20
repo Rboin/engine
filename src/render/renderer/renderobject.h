@@ -19,7 +19,7 @@ public:
   std::unique_ptr<Mesh> &getMesh();
   VertexPtr &getVertex();
   TexturePtr &getTexture();
-  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
+  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 model, const glm::mat4 &viewProjectionMatrix);
 
 private:
   bool initialized;

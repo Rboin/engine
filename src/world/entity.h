@@ -9,14 +9,15 @@ public:
   Entity();
   virtual ~Entity();
 
-  glm::mat4 getModelMatrix();
+  const glm::mat4 &getModelMatrix();
 
-  virtual void update(const double &delta) = 0;
+  virtual void update(const double &delta);
 
 protected:
-  glm::vec4 position;
-  glm::vec4 rotation;
-  glm::vec4 scaling;
+  glm::vec3 _position, _rotation, _scaling;
+  glm::mat4 _model;
+
+  void updateModelMatrix();
 };
 
 #endif // ENTITY_H

@@ -3,22 +3,35 @@
 
 Entity::Entity()
 {
+  this->_position = glm::vec3(0.0f, 0.0f, 0.0f);
+  this->_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  this->_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 Entity::~Entity()
 {
 }
 
-glm::mat4 Entity::getModelMatrix()
+const glm::mat4 &Entity::getModelMatrix()
 {
-  const glm::vec3 &pos = this->position;
-  glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), pos);
-  glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), this->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-  glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), this->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-  glm::mat4 rotZ = glm::rotate(glm::mat4(1.0f), this->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-  glm::mat4 rotationMatrix = rotX * rotY * rotZ;
-  const glm::vec3 &scale = this->scaling;
-  glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), scale);
-  glm::mat4 model = translationMatrix * rotationMatrix * scalingMatrix;
-  return model;
+  return this->_model;
+}
+
+void Entity::update(const double &delta)
+{
+//  this->_rotation.x += (delta * 10);
+//  this->_rotation.y += (delta * 10);
+  // Update logic (calculate velocities etc).
+  this->updateModelMatrix();
+}
+
+void Entity::updateModelMatrix()
+{
+  glm::mat4 translate = glm::translate(glm::mat4(1.0f), this->_position),
+            rotateX = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)),
+            rotateY = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)),
+            rotateZ = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)),
+            rotation = rotateZ * rotateY * rotateX,
+            scale = glm::scale(glm::mat4(1.0f), this->_scaling);
+  this->_model = translate * rotation * scale;
 }

@@ -38,7 +38,7 @@ TexturePtr &RenderObject::getTexture()
 
 static int tmpRads = 0;
 
-void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 model, const glm::mat4 &viewProjectionMatrix)
 {
 
 
@@ -50,10 +50,9 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
     proxy->glBindTexture(GL_TEXTURE_2D, currentTexture->texture);
   }
 
-  glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians((float) tmpRads++), glm::vec3(0.5f, 1.0f, 0.0f));
-
-  int transLoc = proxy->glGetUniformLocation(programId, "model");
-  proxy->glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(model));
+  glm::mat4 MVP = viewProjectionMatrix * model;
+  int transLoc = proxy->glGetUniformLocation(programId, "MVP");
+  proxy->glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(MVP));
 
   // Bind VAO and draw elements using indices.
   GLuint vao = this->_mesh->getVao();
