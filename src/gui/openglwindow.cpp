@@ -15,6 +15,7 @@ OpenGLWindow::OpenGLWindow(QWindow *parent, QSurfaceFormat f) : OpenGLWindow(par
   this->setSurfaceType(QWindow::OpenGLSurface);
   this->setFormat(f);
   this->create();
+  this->setCursor(Qt::BlankCursor);
   this->_lastNanos = 0;
 }
 
@@ -155,6 +156,24 @@ void OpenGLWindow::keyPressEvent(QKeyEvent *e)
     break;
   case Qt::Key_D:
     this->renderer->getCamera()->move(CameraDirection::RIGHT);
+    break;
+  }
+}
+
+void OpenGLWindow::keyReleaseEvent(QKeyEvent *e)
+{
+  switch (e->key()) {
+  case Qt::Key_W:
+    this->renderer->getCamera()->undoMove(CameraDirection::FORWARD);
+    break;
+  case Qt::Key_S:
+    this->renderer->getCamera()->undoMove(CameraDirection::BACKWARD);
+    break;
+  case Qt::Key_A:
+    this->renderer->getCamera()->undoMove(CameraDirection::LEFT);
+    break;
+  case Qt::Key_D:
+    this->renderer->getCamera()->undoMove(CameraDirection::RIGHT);
     break;
   }
 }

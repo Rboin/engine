@@ -47,6 +47,7 @@ private:
 protected:
   void resizeEvent(QResizeEvent *) override;
   void keyPressEvent(QKeyEvent *) override;
+  void keyReleaseEvent(QKeyEvent *) override;
   void mouseMoveEvent(QMouseEvent *) override;
 };
 
