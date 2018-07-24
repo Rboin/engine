@@ -84,7 +84,6 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
     if(!this->_initialized) {
       this->initialize();
       this->initializeRenderObjects(world);
-      this->_camera->initialize(this->_program, this->_proxy);
 
       this->_initialized = true;
     }

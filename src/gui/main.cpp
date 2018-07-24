@@ -1,13 +1,12 @@
-#include "openglwindow.h"
-#include "qtopenglproxy.h"
-#include "movingentity.h"
 
+#include <iostream>
 #include <QApplication>
 #include <QFile>
-#include <QTimer>
-#include <iostream>
-#include <QOpenGLTexture>
 #include <QFileInfo>
+
+#include "movingentity.h"
+#include "openglwindow.h"
+#include "qtopenglproxy.h"
 
 TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internalFormat, int nChannels)
 {
@@ -181,13 +180,14 @@ int main(int argc, char **argv)
   format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
   format.setSamples(4);
   QSurfaceFormat::setDefaultFormat(format);
-  OpenGLWindow window(format);
+  OpenGLWindow window(nullptr, format);
   window.setWorld(createWorld());
-  Camera *camera = new Camera(45.0f, 0.1f, 100.0f);
-  camera->addToMovementBuffer(glm::vec3(0.0f, 0.0f, 3.0f));
+  Camera *camera = new Camera({45.0f, 0.1f, 100.0f},
+  {glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
+  camera->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
   window.setRenderer(new Renderer(camera));
-  window.setHeight(600);
-  window.setWidth(800);
+  window.setHeight(720);
+  window.setWidth(1280);
   window.initialize();
   window.show();
 

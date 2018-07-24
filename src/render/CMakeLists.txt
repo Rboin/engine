@@ -1,6 +1,7 @@
 project(game_render)
 
 set(OpenGL_GL_PREFERENCE GLVND)
+
 find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
 
@@ -34,8 +35,6 @@ include_directories(
     ${OPENGL_INCLUDE_DIRS}
     ../world
 )
-
-
 
 add_library(render SHARED ${RENDERERS} ${SHADERS} ${ENTITIES})
 target_link_libraries(render glm ${OPENGL_LIBRARIES} world)

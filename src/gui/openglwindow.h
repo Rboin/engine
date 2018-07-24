@@ -5,6 +5,7 @@
 #include <QWindow>
 #include <QTimer>
 #include <QElapsedTimer>
+
 #include "glm/glm.hpp"
 #include "qtopenglproxy.h"
 #include "world.hpp"
@@ -15,8 +16,9 @@ class OpenGLWindow : public QWindow
 {
   Q_OBJECT
 public:
-  OpenGLWindow(QSurfaceFormat f, QWindow *parent = nullptr);
-  virtual ~OpenGLWindow() Q_DECL_OVERRIDE;
+  explicit OpenGLWindow(QWindow *parent = nullptr);
+  OpenGLWindow(QWindow *parent, QSurfaceFormat f);
+  ~OpenGLWindow() override;
 
   void initialize();
 
