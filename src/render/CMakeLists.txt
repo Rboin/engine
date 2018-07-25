@@ -23,7 +23,8 @@ set(SHADERS
 )
 
 set(ENTITIES
-    camera/camera.h camera/camera.cpp
+    camera/camera.hpp
+    camera/fpscamera.h camera/fpscamera.cpp
     entities/renderableentity.h entities/renderableentity.cpp
 )
 

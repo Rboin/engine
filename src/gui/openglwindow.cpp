@@ -146,16 +146,16 @@ void OpenGLWindow::keyPressEvent(QKeyEvent *e)
 {
   switch(e->key()) {
   case Qt::Key_W:
-    this->renderer->getCamera()->move(CameraDirection::FORWARD);
+    this->renderer->getCamera()->move(Direction::FORWARD);
     break;
   case Qt::Key_S:
-    this->renderer->getCamera()->move(CameraDirection::BACKWARD);
+    this->renderer->getCamera()->move(Direction::BACKWARD);
     break;
   case Qt::Key_A:
-    this->renderer->getCamera()->move(CameraDirection::LEFT);
+    this->renderer->getCamera()->move(Direction::LEFT);
     break;
   case Qt::Key_D:
-    this->renderer->getCamera()->move(CameraDirection::RIGHT);
+    this->renderer->getCamera()->move(Direction::RIGHT);
     break;
   }
 }
@@ -164,16 +164,16 @@ void OpenGLWindow::keyReleaseEvent(QKeyEvent *e)
 {
   switch (e->key()) {
   case Qt::Key_W:
-    this->renderer->getCamera()->undoMove(CameraDirection::FORWARD);
+    this->renderer->getCamera()->undoMove(Direction::FORWARD);
     break;
   case Qt::Key_S:
-    this->renderer->getCamera()->undoMove(CameraDirection::BACKWARD);
+    this->renderer->getCamera()->undoMove(Direction::BACKWARD);
     break;
   case Qt::Key_A:
-    this->renderer->getCamera()->undoMove(CameraDirection::LEFT);
+    this->renderer->getCamera()->undoMove(Direction::LEFT);
     break;
   case Qt::Key_D:
-    this->renderer->getCamera()->undoMove(CameraDirection::RIGHT);
+    this->renderer->getCamera()->undoMove(Direction::RIGHT);
     break;
   }
 }

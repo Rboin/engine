@@ -7,7 +7,7 @@
 #include "glm/glm.hpp"
 #include "entities/renderableentity.h"
 #include "world.hpp"
-#include "camera/camera.h"
+#include "camera/camera.hpp"
 
 typedef const std::vector<std::unique_ptr<RenderableEntity>> RenderableVector;
 typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator RenderableVectorIterator;

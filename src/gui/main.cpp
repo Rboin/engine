@@ -6,6 +6,7 @@
 
 #include "movingentity.h"
 #include "openglwindow.h"
+#include "camera/fpscamera.h"
 #include "qtopenglproxy.h"
 
 TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internalFormat, int nChannels)
@@ -182,7 +183,7 @@ int main(int argc, char **argv)
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
   window.setWorld(createWorld());
-  Camera *camera = new Camera({45.0f, 0.1f, 100.0f},
+  Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
   {glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
   camera->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
   window.setRenderer(new Renderer(camera));
