@@ -6,6 +6,7 @@ set(SOURCE_FILES
     entity.h entity.cpp
     movingentity.h movingentity.cpp
     world.hpp
+    axis.h axis.cpp
 )
 
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})

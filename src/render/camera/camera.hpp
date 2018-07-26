@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "axis.h"
 #include "renderer/openglfunctionproxy.h"
 
 enum Direction {
@@ -23,7 +24,7 @@ struct projection_information {
 };
 
 struct view_information {
-  glm::vec3 position, up, look;
+  glm::vec3 position, up, look, right;
 };
 
 class Camera
@@ -39,8 +40,7 @@ public:
     this->_position_buffer = glm::vec3(0.0f);
     this->_rotation = glm::vec3(0.0f);
     this->_rotation_buffer = glm::vec3(0.0f);
-    this->_up = v.up;
-    this->_direction = v.look;
+    this->_axis = std::make_unique<Axis>(v.up, v.look, v.right);
   }
 
   /**
@@ -105,9 +105,7 @@ public:
   }
 
   virtual void update(const float &delta) = 0;
-  virtual glm::mat4 getOrientation() const = 0;
-  virtual glm::vec3 getCurrentDirection() = 0;
-  virtual glm::vec3 getCurrentAxis() = 0;
+  virtual glm::mat4 getRotation() const = 0;
   virtual void updateViewMatrix() = 0;
   virtual void updateProjectionMatrix(const int width, const int height) = 0;
 
@@ -115,9 +113,9 @@ protected:
   int _movement;
   float _fov, _near, _far;
   glm::vec3 _position, _position_buffer,
-      _rotation, _rotation_buffer,
-      _up, _axis, _direction;
+      _rotation, _rotation_buffer;
   glm::mat4 _view, _projection;
+  std::unique_ptr<Axis> _axis;
 
   /**
    * Gets the current forward and right directions and adds these
@@ -128,13 +126,14 @@ protected:
   void updatePositionBuffer()
   {
     if (this->_movement) {
-      glm::vec3 forward = this->getCurrentDirection();
-      glm::vec3 right = this->getCurrentAxis();
+      glm::vec3 up = this->_axis->getCurrentUp();
+      glm::vec3 forward = this->_axis->getCurrentDirection();
+      glm::vec3 right = this->_axis->getCurrentRight();
       if (this->_movement & Direction::UP) {
-        this->addPosition(this->_up);
+        this->addPosition(up);
       }
       if (this->_movement & Direction::DOWN) {
-        this->addPosition(-this->_up);
+        this->addPosition(-up);
       }
       if (this->_movement & Direction::FORWARD) {
         this->addPosition(forward);

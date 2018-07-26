@@ -30,26 +30,7 @@ public:
    * @return A glm::mat4 (rotation matrix) containing the current
    * orientation.
    */
-  glm::mat4 getOrientation() const override;
-
-  /**
-   * Determines the current forward direction (relative -Z-axis) using
-   * the inverse of the orientation matrix
-   * (obtained by FPSCamera::getOrientation()).
-   * @brief getCurrentDirection
-   * @return A glm::vec3 (forward direction vector, -Z-axis) containing
-   * the current forward direction.
-   */
-  glm::vec3 getCurrentDirection() override;
-
-  /**
-   * Determines the current right direction (relative X-axis) using the
-   * direction vector obtained from FPSCamera::getCurrentDirection().
-   * @brief getCurrentAxis
-   * @return A glm::vec3 (right direction vector, X-axis) containing
-   * the current right direction.
-   */
-  glm::vec3 getCurrentAxis() override;
+  glm::mat4 getRotation() const override;
 
   /**
    * Updates the view matrix using a translation matrix that uses
