@@ -73,6 +73,11 @@ public:
     this->_rotation_buffer += delta;
   }
 
+  const glm::vec3 &getRotationVector() const
+  {
+    return this->_rotation;
+  }
+
   /**
    * Adds the given vector to the position buffer.
    * @brief addPosition
@@ -88,9 +93,14 @@ public:
    * @brief setPosition
    * @param p A vector (XYZ) containing the position.
    */
-  void setPosition(const glm::vec3 p)
+  void setPosition(glm::vec3 p)
   {
     this->_position = p;
+  }
+
+  glm::vec3 getPosition()
+  {
+    return this->_position;
   }
 
   glm::mat4 &getViewMatrix()

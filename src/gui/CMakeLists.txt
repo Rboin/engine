@@ -15,6 +15,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+
+
+find_library(world REQUIRED)
+find_library(render REQUIRED)
+
 include_directories(
     ${CMAKE_INCLUDE_CURRENT_DIR}
     ${CMAKE_SOURCE_DIR}/include

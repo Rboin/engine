@@ -40,8 +40,6 @@ static int tmpRads = 0;
 
 void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 model, const glm::mat4 &viewProjectionMatrix)
 {
-
-
   // Bind texture(s).
   std::vector<std::unique_ptr<TextureImage>> &textures = this->_mesh->getTexture()->getTextures();
   for (unsigned int i = 0; i < textures.size(); i++) {

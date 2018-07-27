@@ -10,7 +10,7 @@ MovingEntity::~MovingEntity()
 
 }
 
-void MovingEntity::update(const double &delta)
+void MovingEntity::update(const float &delta)
 {
   Entity::update(delta);
 }

@@ -3,6 +3,13 @@
 
 #include <glm/glm.hpp>
 
+/**
+ * Class that holds the current orientation in 3D space.
+ * The orientation can be updated using the rotation
+ * matrices of entities or cameras using the
+ * Axis::update(const glm::mat4 &) method.
+ * @brief The Axis class
+ */
 class Axis
 {
 public:

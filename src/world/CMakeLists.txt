@@ -1,19 +1,16 @@
-project(game_world)
+project(World VERSION 0.0.1 DESCRIPTION "World library")
+
+#add_subdirectory(${PROJECT_INCLUDE_DIR})
 
 find_package(glm REQUIRED)
 
 set(SOURCE_FILES
-    entity.h entity.cpp
-    movingentity.h movingentity.cpp
-    world.hpp
-    axis.h axis.cpp
+    src/entity.cpp
+    src/movingentity.cpp
+    src/axis.cpp
 )
 
-include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
 add_library(world SHARED ${SOURCE_FILES})
-target_link_libraries(world glm)
-
+target_include_directories(world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_executable(world_bin "main.cpp")
-target_link_libraries(world_bin world)
+target_link_libraries(world_bin PRIVATE world)

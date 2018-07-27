@@ -52,7 +52,6 @@ void OpenGLWindow::update()
   double deltaSeconds = static_cast<double>(elapsed - this->_lastNanos) / 1000000000;
 
 //  qDebug() << "Updating with delta: " << deltaSeconds;
-  this->renderer->getCamera()->update(deltaSeconds);
   this->world->update(deltaSeconds);
   this->_lastNanos = elapsed;
 }

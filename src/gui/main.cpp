@@ -5,6 +5,7 @@
 #include <QFileInfo>
 
 #include "movingentity.h"
+#include "entities/playableentity.h"
 #include "openglwindow.h"
 #include "camera/fpscamera.h"
 #include "qtopenglproxy.h"
@@ -39,10 +40,17 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 }
 
-World<RenderableEntity> *createWorld()
+Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
 {
   Entity *e = new MovingEntity();
+  e->setPosition(position);
+  e->setRotation(rotation);
+  e->setScaling(scaling);
+  return e;
+}
 
+RenderObject *createRenderObject()
+{
   std::vector<glm::vec3> vertices = {
     // Positions
     glm::vec3(-0.5f, -0.5f, -0.5f),
@@ -165,7 +173,17 @@ World<RenderableEntity> *createWorld()
                                glm::vec3(0.0f, 0.0f, 1.0f));
   Mesh *m = new Mesh(0, v, t, mat);
   RenderObject *r = new RenderObject(m);
-  RenderableEntity *entity = new RenderableEntity(e, r);
+  return r;
+}
+
+World<RenderableEntity> *createWorld()
+{
+
+  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, -5.0f),
+                                                               glm::vec3(0.0f, 0.0f, 0.0f),
+                                                               glm::vec3(0.5f, 0.5f, 0.5f)),
+                                                  createRenderObject());
+
   World<RenderableEntity> *world = new World<RenderableEntity>();
   world->addEntity(entity);
   return world;
@@ -182,11 +200,16 @@ int main(int argc, char **argv)
   format.setSamples(4);
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
-  window.setWorld(createWorld());
+  World<RenderableEntity> *world = createWorld();
+  window.setWorld(world);
   Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
-  {glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
-  camera->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
-  window.setRenderer(new Renderer(camera));
+  {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
+  PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                   glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                   glm::vec3(0.25f, 0.25f, 0.25f)),
+                                              createRenderObject());
+  world->addEntity(player);
+  window.setRenderer(new Renderer(player->getCamera()));
   window.setHeight(720);
   window.setWidth(1280);
   window.initialize();

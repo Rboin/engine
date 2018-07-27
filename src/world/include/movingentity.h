@@ -11,7 +11,7 @@ public:
 
   // Entity interface
 public:
-  void update(const double &delta) override;
+  void update(const float &delta) override;
 };
 
 #endif // MOVINGENTITY_H

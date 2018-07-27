@@ -9,10 +9,10 @@
 #include "renderobject.h"
 #include "shader/shaderinformation.h"
 
-Renderer::Renderer(Camera *c) :
+Renderer::Renderer(std::shared_ptr<Camera> &c) :
   _initialized(false)
 {
-  this->_camera = std::unique_ptr<Camera>(c);
+  this->_camera = c;
 }
 
 Renderer::~Renderer()
@@ -103,7 +103,7 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
 
 }
 
-std::unique_ptr<Camera> &Renderer::getCamera()
+std::shared_ptr<Camera> &Renderer::getCamera()
 {
   return this->_camera;
 }

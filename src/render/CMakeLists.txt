@@ -5,6 +5,7 @@ set(OpenGL_GL_PREFERENCE GLVND)
 find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
 
+
 add_definitions(${OPENGL_DEFINITIONS})
 
 set(RENDERERS
@@ -26,6 +27,7 @@ set(ENTITIES
     camera/camera.hpp
     camera/fpscamera.h camera/fpscamera.cpp
     entities/renderableentity.h entities/renderableentity.cpp
+    entities/playableentity.h entities/playableentity.cpp
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

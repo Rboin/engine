@@ -21,7 +21,22 @@ void RenderableEntity::render(GLuint programId, std::shared_ptr<OpenGLFunctionPr
   this->renderObject->render(programId, proxy, this->entity->getModelMatrix(), viewProjectionMatrix);
 }
 
-void RenderableEntity::update(const double &delta)
+void RenderableEntity::update(const float &delta)
 {
   this->entity->update(delta);
+}
+
+void RenderableEntity::setPosition(glm::vec3 p)
+{
+  this->entity->setPosition(p);
+}
+
+void RenderableEntity::setRotation(glm::vec3 r)
+{
+  this->entity->setRotation(r);
+}
+
+void RenderableEntity::setScaling(glm::vec3 s)
+{
+  this->entity->setScaling(s);
 }
