@@ -5,15 +5,13 @@
 #include <QFileInfo>
 
 #include "movingentity.h"
-#include "entities/playableentity.h"
+#include "playableentity.h"
 #include "openglwindow.h"
-#include "camera/fpscamera.h"
+#include "fpscamera.h"
 #include "qtopenglproxy.h"
 
 TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internalFormat, int nChannels)
 {
-
-
   TextureImage *result = new TextureImage;
 
   QImage image;
@@ -40,9 +38,10 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 }
 
-Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
+Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, glm::vec3 up, glm::vec3 forward, glm::vec3 right)
 {
-  Entity *e = new MovingEntity();
+  std::shared_ptr<Axis> axis = std::make_shared<Axis>(up, forward, right);
+  Entity *e = new MovingEntity(axis);
   e->setPosition(position);
   e->setRotation(rotation);
   e->setScaling(scaling);
@@ -181,7 +180,10 @@ World<RenderableEntity> *createWorld()
 
   RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, -5.0f),
                                                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                                               glm::vec3(0.5f, 0.5f, 0.5f)),
+                                                               glm::vec3(0.5f, 0.5f, 0.5f),
+                                                               glm::vec3(0.0f, 1.0f, 0.0f),
+                                                               glm::vec3(0.0f, 0.0f, -1.0f),
+                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
                                                   createRenderObject());
 
   World<RenderableEntity> *world = new World<RenderableEntity>();
@@ -206,8 +208,12 @@ int main(int argc, char **argv)
   {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
   PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                   glm::vec3(0.25f, 0.25f, 0.25f)),
+                                                                   glm::vec3(0.25f, 0.25f, 0.25f),
+                                                                   glm::vec3(0.0f, 1.0f, 0.0f),
+                                                                   glm::vec3(0.0f, 0.0f, -1.0f),
+                                                                   glm::vec3(1.0f, 0.0f, 0.0f)),
                                               createRenderObject());
+  player->setAxis(camera->getAxis());
   world->addEntity(player);
   window.setRenderer(new Renderer(player->getCamera()));
   window.setHeight(720);

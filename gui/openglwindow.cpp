@@ -4,11 +4,11 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QResizeEvent>
 #include <QtDebug>
+#include <glm/gtc/matrix_transform.hpp>
+#include <GL/gl.h>
 
-#include "glm/gtc/matrix_transform.hpp"
-#include "GL/gl.h"
-#include "shader/shader.h"
-#include "shader/shaderinformation.h"
+#include "shader.h"
+#include "shaderinformation.h"
 
 OpenGLWindow::OpenGLWindow(QWindow *parent, QSurfaceFormat f) : OpenGLWindow(parent)
 {

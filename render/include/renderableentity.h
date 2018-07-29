@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "entity.h"
-#include "renderer/renderobject.h"
+#include "renderobject.h"
 
 class RenderableEntity : public Entity
 {

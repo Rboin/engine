@@ -1,6 +1,6 @@
 #include "renderableentity.h"
 
-RenderableEntity::RenderableEntity(Entity *e, RenderObject *r)
+RenderableEntity::RenderableEntity(Entity *e, RenderObject *r) : Entity(e->getAxis())
 {
   this->entity = std::unique_ptr<Entity>(e);
   this->renderObject = std::unique_ptr<RenderObject>(r);

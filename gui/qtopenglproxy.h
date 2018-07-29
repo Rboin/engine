@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <QOpenGLFunctions_4_3_Core>
-#include "renderer/openglfunctionproxy.h"
+#include "openglfunctionproxy.h"
 
 class QtOpenGLProxy : public OpenGLFunctionProxy
 {

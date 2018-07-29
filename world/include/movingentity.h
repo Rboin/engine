@@ -6,7 +6,7 @@
 class MovingEntity : public Entity
 {
 public:
-  MovingEntity();
+  MovingEntity(std::shared_ptr<Axis> &a);
   ~MovingEntity() override;
 
   // Entity interface

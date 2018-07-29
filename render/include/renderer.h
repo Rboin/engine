@@ -2,12 +2,12 @@
 #define RENDERER_H
 
 #include <memory>
-#include <shader/shader.h>
-#include "renderer/openglfunctionproxy.h"
+#include "shader.h"
+#include "openglfunctionproxy.h"
 #include "glm/glm.hpp"
-#include "entities/renderableentity.h"
+#include "renderableentity.h"
 #include "world.hpp"
-#include "camera/camera.hpp"
+#include "camera.hpp"
 
 typedef const std::vector<std::unique_ptr<RenderableEntity>> RenderableVector;
 typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator RenderableVectorIterator;

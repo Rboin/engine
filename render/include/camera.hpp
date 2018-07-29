@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "axis.h"
-#include "renderer/openglfunctionproxy.h"
+#include "openglfunctionproxy.h"
 
 enum Direction {
   UP = 1,
@@ -40,7 +40,7 @@ public:
     this->_position_buffer = glm::vec3(0.0f);
     this->_rotation = glm::vec3(0.0f);
     this->_rotation_buffer = glm::vec3(0.0f);
-    this->_axis = std::make_unique<Axis>(v.up, v.look, v.right);
+    this->_axis = std::make_shared<Axis>(v.up, v.look, v.right);
   }
 
   /**
@@ -114,6 +114,11 @@ public:
     return this->_projection;
   }
 
+  std::shared_ptr<Axis> &getAxis()
+  {
+    return this->_axis;
+  }
+
   virtual void update(const float &delta) = 0;
   virtual glm::mat4 getRotation() const = 0;
   virtual void updateViewMatrix() = 0;
@@ -125,7 +130,7 @@ protected:
   glm::vec3 _position, _position_buffer,
       _rotation, _rotation_buffer;
   glm::mat4 _view, _projection;
-  std::unique_ptr<Axis> _axis;
+  std::shared_ptr<Axis> _axis;
 
   /**
    * Gets the current forward and right directions and adds these

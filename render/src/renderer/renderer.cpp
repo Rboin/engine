@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "renderobject.h"
-#include "shader/shaderinformation.h"
+#include "shaderinformation.h"
 
 Renderer::Renderer(std::shared_ptr<Camera> &c) :
   _initialized(false)

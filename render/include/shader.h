@@ -1,11 +1,10 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-
 #include <memory>
 
 #include "shaderinformation.h"
-#include "renderer/openglfunctionproxy.h"
+#include "openglfunctionproxy.h"
 
 class Shader
 {

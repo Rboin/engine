@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "renderableentity.h"
-#include "camera/camera.hpp"
+#include "camera.hpp"
 
 class PlayableEntity : public RenderableEntity
 {

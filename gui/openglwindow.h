@@ -9,8 +9,7 @@
 #include "glm/glm.hpp"
 #include "qtopenglproxy.h"
 #include "world.hpp"
-#include "entities/renderableentity.h"
-#include "renderer/renderer.h"
+#include "renderer.h"
 
 class OpenGLWindow : public QWindow
 {
