@@ -20,6 +20,16 @@ public:
 
   void initialize() {}
 
+  void setLight(T *entity)
+  {
+    this->_light = std::unique_ptr<T>(entity);
+  }
+
+  std::unique_ptr<T> &getLight()
+  {
+    return this->_light;
+  }
+
   void addEntity(T *entity)
   {
     this->entities.push_back(std::unique_ptr<T>(entity));
@@ -52,6 +62,7 @@ public:
   }
 
 private:
+  std::unique_ptr<T> _light;
   std::vector<std::unique_ptr<T> > entities;
 };
 

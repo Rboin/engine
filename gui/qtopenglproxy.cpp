@@ -108,6 +108,21 @@ void QtOpenGLProxy::glUniformMatrix4fv(GLint location, GLsizei count, GLboolean 
   this->_functions->glUniformMatrix4fv(location, count, transpose, value);
 }
 
+void QtOpenGLProxy::glUniform1fv(GLint location, GLsizei count, const GLfloat *value)
+{
+  this->_functions->glUniform1fv(location, count, value);
+}
+
+void QtOpenGLProxy::glUniform3fv(GLint location, GLsizei count, const GLfloat *value)
+{
+  this->_functions->glUniform3fv(location, count, value);
+}
+
+void QtOpenGLProxy::glUniform4fv(GLint location, GLsizei count, const GLfloat *value)
+{
+  this->_functions->glUniform4fv(location, count, value);
+}
+
 void QtOpenGLProxy::glUniform1i(GLint location, GLint v0)
 {
   this->_functions->glUniform1i(location, v0);

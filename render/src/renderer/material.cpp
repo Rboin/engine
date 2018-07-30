@@ -1,7 +1,8 @@
 #include "material.h"
 
-Material::Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
+Material::Material(float power, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
   _initialized(false),
+  _power(power),
   _ambientColor(ambient),
   _diffuseColor(diffuse),
   _specularColor(specular)
@@ -30,4 +31,14 @@ GLint Material::getUniformDiffuse() const
 GLint Material::getUniformSpecular() const
 {
   return this->u_specular;
+}
+
+glm::vec3 &Material::getAmbientColor()
+{
+  return this->_ambientColor;
+}
+
+float Material::getReflectPower()
+{
+  return this->_power;
 }

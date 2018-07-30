@@ -11,7 +11,6 @@ set(PUBLIC_HEADERS
     include/camera.hpp
     include/openglfunctionproxy.h
     include/renderer.h
-    include/light.h
     include/renderableentity.h
     include/playableentity.h
     include/mesh.h
@@ -21,7 +20,9 @@ set(PUBLIC_HEADERS
     include/vertex.h
     include/texture.h
     include/renderobject.h
-    include/fpscamera.h)
+    include/fpscamera.h
+    include/lightrenderobject.h
+    include/shaderattribute.h)
 
 
 set(SOURCE_FILES
@@ -36,7 +37,9 @@ set(SOURCE_FILES
     src/camera/fpscamera.cpp
     src/entities/renderableentity.cpp
     src/entities/playableentity.cpp
-    src/entities/light.cpp)
+    src/renderer/lightrenderobject.cpp
+    src/renderer/lightmesh.h src/renderer/lightmesh.cpp
+    )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

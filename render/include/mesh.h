@@ -14,7 +14,7 @@ public:
   Mesh();
   Mesh(GLuint vao, Vertex *v, Texture *t, Material* m);
 
-  void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
+  virtual void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   bool isInitialized();
   void setVao(GLuint vao);
   GLuint getVao();

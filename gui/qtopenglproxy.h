@@ -52,6 +52,9 @@ public:
   GLint glGetAttribLocation(GLuint program, const GLchar *name) override;
   GLint glGetUniformLocation(GLuint program, const GLchar *name) override;
   void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
+  void glUniform1fv(GLint location, GLsizei count, const GLfloat *value) override;
+  void glUniform3fv(GLint location, GLsizei count, const GLfloat *value) override;
+  void glUniform4fv(GLint location, GLsizei count, const GLfloat *value) override;
   void glUniform1i(GLint location, GLint v0) override;
   void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) override;
   void glDrawArrays(GLenum mode, GLint first, GLsizei count) override;

@@ -3,8 +3,7 @@
 
 #include <string>
 #include <memory>
-#include "GL/gl.h"
-
+#include <GL/gl.h>
 
 class ShaderInformation
 {

@@ -47,6 +47,9 @@ public:
   virtual GLint glGetAttribLocation(GLuint program, const GLchar *name) = 0;
   virtual GLint glGetUniformLocation(GLuint program, const GLchar *name) = 0;
   virtual void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) = 0;
+  virtual void glUniform1fv(GLint location, GLsizei count, const GLfloat *value) = 0;
+  virtual void glUniform3fv(GLint location, GLsizei count, const GLfloat *value) = 0;
+  virtual void glUniform4fv(GLint location, GLsizei count, const GLfloat *value) = 0;
   virtual void glUniform1i(GLint location, GLint v0) = 0;
   // Drawing
   virtual void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) = 0;
