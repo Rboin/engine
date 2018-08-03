@@ -28,12 +28,13 @@ public:
 
 protected:
   bool initialized;
-  glm::mat4 _currentMVP;
+  glm::mat4 _modelToWorld, _modelToProjection;
   std::unique_ptr<Mesh> _mesh;
 
   void bind(GLuint vao, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   void unbind(std::shared_ptr<OpenGLFunctionProxy> &proxy);
   void setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy);
+  void updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection);
 };
 
 #endif // RENDEROBJECT_H

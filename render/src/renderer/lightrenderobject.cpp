@@ -13,7 +13,7 @@ void LightRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionP
   GLuint vao = this->_mesh->getVao();
   this->bind(vao, proxy);
 
-  this->_currentMVP = viewProjectionMatrix * entity->getModelMatrix();
+  this->updateMatrices(entity->getModelMatrix(), viewProjectionMatrix);
   this->_currentPosition = entity->getPosition();
   this->setUniforms(programId, proxy);
   unsigned int verticesSize = this->_mesh->getVertex()->getVerticesSize();
@@ -25,9 +25,7 @@ void LightRenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFuncti
 {
   // Set Light uniform color
   glm::vec3 color = this->_mesh->getMaterial()->getAmbientColor();
-  int lightLocation = FragmentAttribute::UNIFORM_LIGHT_COLOR;
-  proxy->glUniform3fv(lightLocation, 1, glm::value_ptr(color));
-  int lightPositionLocation = FragmentAttribute::UNIFORM_LIGHT_POSITION;
-  proxy->glUniform3fv(lightPositionLocation, 1, glm::value_ptr(this->_currentPosition));
+  proxy->glUniform3fv(FragmentAttribute::UNIFORM_LIGHT_COLOR, 1, glm::value_ptr(color));
+  proxy->glUniform3fv(FragmentAttribute::UNIFORM_LIGHT_POSITION, 1, glm::value_ptr(this->_currentPosition));
   RenderObject::setUniforms(program, proxy);
 }

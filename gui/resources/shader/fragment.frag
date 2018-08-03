@@ -1,18 +1,25 @@
 #version 430 core
-out vec4 col;
 
-in vec2 texCoordinate;
-//in vec3 Normal;
+out vec4 color;
 
-layout(location = 5) uniform float reflectPower;
-layout(location = 6) uniform vec3 lightPosition;
-layout(location = 7) uniform vec3 lightColor;
-layout(location = 8) uniform vec3 objectColor;
-layout(location = 9) uniform sampler2D texture1;
-layout(location = 10) uniform sampler2D texture2;
+in vec2 TextureCoordinate;
+in vec3 Normal;
+in vec3 FragmentPosition;
+
+uniform layout(location = 6) float reflectPower;
+uniform layout(location = 7) vec3 lightPosition;
+uniform layout(location = 8) vec3 lightColor;
+uniform layout(location = 9) vec3 objectColor;
+uniform layout(location = 10) sampler2D texture1;
+uniform layout(location = 11) sampler2D texture2;
 
 void main() {
-    vec3 absorbedObjectColor = reflectPower * objectColor;
-    vec3 result = lightColor * absorbedObjectColor;
-    col = vec4(result, 1.0f) * mix(texture(texture1, texCoordinate), texture(texture2, texCoordinate), 0.2);
+    vec3 ambient = 0.1 * lightColor;
+    vec3 norm = normalize(Normal);
+    vec3 lightRayDirection = normalize(lightPosition - FragmentPosition);
+    float diffuseScalar = max(dot(Normal, lightRayDirection), 0.0);
+    vec3 diffuseColor = diffuseScalar * lightColor;
+    vec3 reflectedColor = reflectPower * objectColor;
+    vec3 resultingColor = (lightColor + diffuseColor) * reflectedColor;
+    color = vec4(resultingColor, 1.0);// * mix(texture(texture1, TextureCoordinate), texture(texture2, TextureCoordinate), 0.2);
 }

@@ -62,35 +62,30 @@ T *createRenderObject(float colorPower, glm::vec3 color)
     glm::vec3(0.5f,  0.5f, -0.5f),
     glm::vec3(-0.5f,  0.5f, -0.5f),
     glm::vec3(-0.5f,  -0.5f, -0.5f),
-
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
-
     glm::vec3(-0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f,  0.5f),
-
     glm::vec3(0.5f,  0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
-
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
-
     glm::vec3(-0.5f,  0.5f, -0.5f),
     glm::vec3(0.5f,  0.5f, -0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
@@ -111,35 +106,30 @@ T *createRenderObject(float colorPower, glm::vec3 color)
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
-
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
-
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
-
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
-
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
-
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
@@ -160,12 +150,12 @@ T *createRenderObject(float colorPower, glm::vec3 color)
     glm::vec3(0.0f,  0.0f, 1.0f),
     glm::vec3(0.0f,  0.0f, 1.0f),
     glm::vec3(0.0f,  0.0f, 1.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
-    glm::vec3(1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
+    glm::vec3(-1.0f,  0.0f,  0.0f),
     glm::vec3(1.0f,  0.0f,  0.0f),
     glm::vec3(1.0f,  0.0f,  0.0f),
     glm::vec3(1.0f,  0.0f,  0.0f),
@@ -195,6 +185,7 @@ T *createRenderObject(float colorPower, glm::vec3 color)
   vData->indiceSize = 6;
   vData->colorSize = 4;
   vData->textureSize = 36;
+  vData->normalSize = 36;
   vData->vertices = vertices;
   vData->indices = indices;
   Vertex *v = new Vertex(vData);
@@ -220,13 +211,13 @@ T *createRenderObject(float colorPower, glm::vec3 color)
 World<RenderableEntity> *createWorld()
 {
 
-  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, -5.0f),
+  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, -2.0f),
                                                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                                               glm::vec3(0.5f, 0.5f, 0.5f),
+                                                               glm::vec3(1.0f, 1.0f, 1.0f),
                                                                glm::vec3(0.0f, 1.0f, 0.0f),
                                                                glm::vec3(0.0f, 0.0f, -1.0f),
                                                                glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                  createRenderObject<RenderObject>(0.5f, glm::vec3(0.5f, 0.5f, 1.0f)));
+                                                  createRenderObject<RenderObject>(.25f, glm::vec3(0.5f, 0.5f, 1.0f)));
 
   World<RenderableEntity> *world = new World<RenderableEntity>();
   world->addEntity(entity);
@@ -248,20 +239,20 @@ int main(int argc, char **argv)
   window.setWorld(world);
   Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
   {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
-  RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(-5.0f, 0.0f, 0.0f),
+  RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(-1.0f, 0.0f, 0.0f),
                                                               glm::vec3(0.0f),
-                                                              glm::vec3(1.0f),
+                                                              glm::vec3(.25f),
                                                               glm::vec3(0.0f, 1.0f, 0.0f),
                                                               glm::vec3(0.0f, 0.0f, -1.0f),
                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
                                                  createRenderObject<LightRenderObject>(1.0f, glm::vec3(1.0f)));
   PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                   glm::vec3(0.25f, 0.25f, 0.25f),
+                                                                   glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 1.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, -1.0f),
                                                                    glm::vec3(1.0f, 0.0f, 0.0f)),
-                                              createRenderObject<RenderObject>(0.5f, glm::vec3(1.0f, 1.0f, 1.0f)));
+                                              createRenderObject<RenderObject>(0.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
   player->setAxis(camera->getAxis());
   world->addEntity(player);
   world->addEntity(light);

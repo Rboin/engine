@@ -12,7 +12,7 @@ void Vertex::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
   proxy->glGenBuffers(1, &this->_vbo);
   proxy->glBindBuffer(GL_ARRAY_BUFFER, this->_vbo);
   proxy->glBufferData(GL_ARRAY_BUFFER,
-                      (this->_data->vertexSize + this->_data->colorSize + this->_data->textureSize) * sizeof(glm::vec3),
+                      this->_data->vertices.size() * sizeof(glm::vec3),
                       this->_data->vertices.data(),
                       GL_STATIC_DRAW);
 
@@ -27,39 +27,42 @@ void Vertex::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
   // Bind shader variables
   GLint vecSize = this->_data->vertices[0].length();
   int position = VertexAttribute::POSITION;
-  proxy->glEnableVertexAttribArray(position);
   proxy->glVertexAttribPointer(position,
                                vecSize,
                                GL_FLOAT,
                                GL_FALSE,
                                sizeof(glm::vec3),
                                (void *) 0);
+  proxy->glEnableVertexAttribArray(position);
+
   int color = proxy->glGetAttribLocation(programId, "inColor");
-  proxy->glEnableVertexAttribArray(color);
   proxy->glVertexAttribPointer(color,
                                vecSize,
                                GL_FLOAT,
                                GL_FALSE,
                                sizeof(glm::vec3),
                                (void *) (this->_data->vertexSize * sizeof(glm::vec3)));
+  proxy->glEnableVertexAttribArray(color);
 
   int textureCoordinates = VertexAttribute::TEXTURE_COORDINATE;
-  proxy->glEnableVertexAttribArray(textureCoordinates);
   proxy->glVertexAttribPointer(textureCoordinates,
                                vecSize,
                                GL_FLOAT,
                                GL_FALSE,
                                sizeof(glm::vec3),
                                (void *) ((this->_data->vertexSize + this->_data->colorSize) * sizeof(glm::vec3)));
+  proxy->glEnableVertexAttribArray(textureCoordinates);
 
-  int normalLocation = VertexAttribute::NORMAL;
-  proxy->glEnableVertexAttribArray(normalLocation);
+  int normalLocation = VertexAttribute::NORMAL,
+      normalIndex = this->_data->vertexSize + this->_data->colorSize + this->_data->textureSize;
   proxy->glVertexAttribPointer(normalLocation,
                                vecSize,
                                GL_FLOAT,
                                GL_FALSE,
                                sizeof(glm::vec3),
-                               (void *) ((this->_data->vertexSize + this->_data->colorSize + this->_data->textureSize) * sizeof(glm::vec3)));
+                               (void *) (normalIndex * sizeof(glm::vec3)));
+  proxy->glEnableVertexAttribArray(normalLocation);
+
   this->_initialized = true;
 }
 

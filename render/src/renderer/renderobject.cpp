@@ -38,18 +38,15 @@ TexturePtr &RenderObject::getTexture()
   return this->_mesh->getTexture();
 }
 
-static int tmpRads = 0;
-
 void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, std::unique_ptr<Entity> &entity, const glm::mat4 &viewProjectionMatrix)
 {
-
   // Bind VAO and draw elements using indices.
   GLuint vao = this->_mesh->getVao();
   this->bind(vao, proxy);
   // Bind texture(s).
   this->setTextures(proxy);
 
-  this->_currentMVP = viewProjectionMatrix * entity->getModelMatrix();
+  this->updateMatrices(entity->getModelMatrix(), viewProjectionMatrix);
   this->setUniforms(programId, proxy);
   unsigned int verticesSize = this->_mesh->getVertex()->getVerticesSize();
   proxy->glDrawArrays(GL_TRIANGLES, 0, verticesSize);
@@ -58,9 +55,9 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
 
 void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-  // Set MVP matrix.
-  int mvpLocation = VertexAttribute::UNIFORM_MVP;
-  proxy->glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(this->_currentMVP));
+  // Set matrices (model -> world and model -> projection)
+  proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_WORLD, 1, GL_FALSE, glm::value_ptr(this->_modelToWorld));
+  proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_PROJECTION, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
   // Set Color
   glm::vec3 color = this->_mesh->getMaterial()->getAmbientColor();
   int colorLocation = FragmentAttribute::UNIFORM_OBJECT_COLOR;
@@ -89,4 +86,10 @@ void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
     proxy->glActiveTexture(GL_TEXTURE0 + i);
     proxy->glBindTexture(GL_TEXTURE_2D, currentTexture->texture);
   }
+}
+
+void RenderObject::updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection)
+{
+  this->_modelToWorld = model;
+  this->_modelToProjection = viewProjection * model;
 }

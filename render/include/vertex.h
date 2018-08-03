@@ -7,7 +7,7 @@
 #include "openglfunctionproxy.h"
 
 struct VertexData {
-  unsigned int vertexSize, indiceSize, colorSize, textureSize;
+  unsigned int vertexSize, indiceSize, colorSize, textureSize, normalSize;
 
   std::vector<glm::vec3> vertices;
   std::vector<unsigned int> indices;

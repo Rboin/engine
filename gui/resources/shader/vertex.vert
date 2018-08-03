@@ -1,17 +1,20 @@
 #version 430 core
 
-layout(location = 1) in vec3 position;
-layout(location = 2) in vec3 textureCoordinate;
-layout(location = 3) in vec3 normal;
-layout(location = 4) uniform mat4 MVP;
+in layout(location = 1) vec3 position;
+in layout(location = 2) vec3 normal;
+in layout(location = 3) vec3 textureCoordinate;
 
-out vec2 texCoordinate;
+uniform layout(location = 4) mat4 modelToWorld;
+uniform layout(location = 5) mat4 modelToProjection;
+
+out vec2 TextureCoordinate;
 out vec3 Normal;
-
+out vec3 FragmentPosition;
 
 void main()
 {
-   gl_Position = MVP * vec4(position, 1.0f);
-   texCoordinate = vec2(textureCoordinate.x, textureCoordinate.y);
-   Normal = normal;
+   gl_Position = modelToProjection * vec4(position, 1.0);
+//   TextureCoordinate = vec2(textureCoordinate.x, textureCoordinate.y);
+   FragmentPosition = vec3(modelToWorld * vec4(position, 1.0));
+   Normal = mat3(transpose(inverse(modelToWorld))) * normal;
 }
