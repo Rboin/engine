@@ -8,10 +8,10 @@
 
 #include "renderobject.h"
 #include "shaderinformation.h"
-#include "shaderattribute.h"
 
 Renderer::Renderer(std::shared_ptr<Camera> &c) :
-  _initialized(false)
+  _initialized(false),
+  u_cameraPosition(-1)
 {
   this->_camera = c;
 }
@@ -92,8 +92,12 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
     this->_proxy->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     this->_proxy->glUseProgram(this->_program);
 
+    if(this->u_cameraPosition < 0) {
+      this->u_cameraPosition = this->_proxy->glGetUniformLocation(this->_program, "cameraPosition");
+    }
+
     glm::vec3 cameraPosition = this->_camera->getPosition();
-    this->_proxy->glUniform3fv(FragmentAttribute::UNIFORM_CAMERA_POSITION, 1, glm::value_ptr(cameraPosition));
+    this->_proxy->glUniform3fv(this->u_cameraPosition, 1, glm::value_ptr(cameraPosition));
     glm::mat4 viewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
     const std::vector<std::unique_ptr<RenderableEntity>> &v = world->getEntities();
     std::vector<std::unique_ptr<RenderableEntity>>::const_iterator iter;

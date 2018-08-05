@@ -1,5 +1,4 @@
 #include "vertex.h"
-#include "shaderattribute.h"
 
 Vertex::Vertex(VertexData *data) :
   _initialized(false)
@@ -26,7 +25,7 @@ void Vertex::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
 
   // Bind shader variables
   GLint vecSize = this->_data->vertices[0].length();
-  int position = VertexAttribute::POSITION;
+  int position = proxy->glGetAttribLocation(programId, "position");
   proxy->glVertexAttribPointer(position,
                                vecSize,
                                GL_FLOAT,
@@ -44,7 +43,7 @@ void Vertex::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
                                (void *) (this->_data->vertexSize * sizeof(glm::vec3)));
   proxy->glEnableVertexAttribArray(color);
 
-  int textureCoordinates = VertexAttribute::TEXTURE_COORDINATE;
+  int textureCoordinates = proxy->glGetAttribLocation(programId, "textureCoordinate");
   proxy->glVertexAttribPointer(textureCoordinates,
                                vecSize,
                                GL_FLOAT,
@@ -53,7 +52,7 @@ void Vertex::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &
                                (void *) ((this->_data->vertexSize + this->_data->colorSize) * sizeof(glm::vec3)));
   proxy->glEnableVertexAttribArray(textureCoordinates);
 
-  int normalLocation = VertexAttribute::NORMAL,
+  int normalLocation = proxy->glGetAttribLocation(programId, "normal"),
       normalIndex = this->_data->vertexSize + this->_data->colorSize + this->_data->textureSize;
   proxy->glVertexAttribPointer(normalLocation,
                                vecSize,

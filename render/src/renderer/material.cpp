@@ -1,22 +1,41 @@
 #include "material.h"
 
-Material::Material(float reflectPower, float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
+Material::Material(float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
   _initialized(false),
-  _power(reflectPower),
   _shinePower(shinePower),
   _ambientColor(ambient),
   _diffuseColor(diffuse),
-  _specularColor(specular)
+  _specularColor(specular),
+  u_shinePower(-1),
+  u_ambient(-1),
+  u_diffuse(-1),
+  u_specular(-1)
 {}
 
 void Material::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-
+  if (this->u_shinePower < 0) {
+    this->u_shinePower = proxy->glGetUniformLocation(programId, "material.shininess");
+  }
+  if (this->u_ambient < 0) {
+    this->u_ambient = proxy->glGetUniformLocation(programId, "material.ambient");
+  }
+  if (this->u_diffuse < 0) {
+    this->u_diffuse = proxy->glGetUniformLocation(programId, "material.diffuse");
+  }
+  if (this->u_specular < 0) {
+    this->u_specular = proxy->glGetUniformLocation(programId, "material.specular");
+  }
 }
 
 bool Material::isInitialized()
 {
   return this->_initialized;
+}
+
+int Material::getUniformShininess() const
+{
+  return this->u_shinePower;
 }
 
 GLint Material::getUniformAmbient() const
@@ -39,9 +58,14 @@ glm::vec3 &Material::getAmbientColor()
   return this->_ambientColor;
 }
 
-float Material::getReflectPower()
+glm::vec3 &Material::getDiffuseColor()
 {
-  return this->_power;
+  return this->_diffuseColor;
+}
+
+glm::vec3 &Material::getSpecularColor()
+{
+  return this->_specularColor;
 }
 
 float Material::getShinePower()

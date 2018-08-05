@@ -15,7 +15,7 @@ class RenderObject
 {
 public:
   RenderObject(Mesh *m);
-  void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
+  virtual void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   bool isInitialized() const;
   std::unique_ptr<Mesh> &getMesh();
   VertexPtr &getVertex();
@@ -28,6 +28,7 @@ public:
 
 protected:
   bool initialized;
+  int u_normalModel, u_modelToWorld, u_modelToProjection;
   glm::mat3 _normalModel;
   glm::mat4 _modelToWorld, _modelToProjection;
   std::unique_ptr<Mesh> _mesh;

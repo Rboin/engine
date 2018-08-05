@@ -21,8 +21,7 @@ set(PUBLIC_HEADERS
     include/texture.h
     include/renderobject.h
     include/fpscamera.h
-    include/lightrenderobject.h
-    include/shaderattribute.h)
+    include/lightrenderobject.h)
 
 
 set(SOURCE_FILES

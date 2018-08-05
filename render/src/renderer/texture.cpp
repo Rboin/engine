@@ -1,5 +1,4 @@
 #include "texture.h"
-#include "shaderattribute.h"
 
 Texture::Texture()
 {
@@ -60,6 +59,6 @@ void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,
   proxy->glGenerateMipMap(GL_TEXTURE_2D);
 
   const char *samplerName = name.c_str();
-  int samplerLocation = FragmentAttribute::UNIFORM_TEXTURE1 + index;
+  int samplerLocation = proxy->glGetUniformLocation(programId, samplerName);
   proxy->glUniform1i(samplerLocation, index);
 }

@@ -4,9 +4,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "shaderattribute.h"
-
-RenderObject::RenderObject(Mesh *m) : initialized(false)
+RenderObject::RenderObject(Mesh *m) :
+  initialized(false),
+  u_normalModel(-1),
+  u_modelToWorld(-1),
+  u_modelToProjection(-1)
 {
   this->_mesh = std::unique_ptr<Mesh>(m);
 }
@@ -15,6 +17,15 @@ void RenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionPr
 {
   if (!this->_mesh->isInitialized()) {
     this->_mesh->initialize(programId, proxy);
+  }
+  if (this->u_normalModel < 0) {
+    this->u_normalModel = proxy->glGetUniformLocation(programId, "normalModel");
+  }
+  if (this->u_modelToWorld < 0) {
+    this->u_modelToWorld = proxy->glGetUniformLocation(programId, "modelToWorld");
+  }
+  if (this->u_modelToProjection < 0) {
+    this->u_modelToProjection = proxy->glGetUniformLocation(programId, "modelToProjection");
   }
 }
 
@@ -56,18 +67,16 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
 void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   // Set matrices (normal -> lightDirection, model -> world and model -> projection)
-  proxy->glUniformMatrix3fv(VertexAttribute::UNIFORM_MODEL_NORMAL, 1, GL_FALSE, glm::value_ptr(this->_normalModel));
-  proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_WORLD, 1, GL_FALSE, glm::value_ptr(this->_modelToWorld));
-  proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_PROJECTION, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
-  // Set Color
-  glm::vec3 color = this->_mesh->getMaterial()->getAmbientColor();
-  proxy->glUniform3fv(FragmentAttribute::UNIFORM_OBJECT_COLOR, 1, glm::value_ptr(color));
-  // Set Color Power (light absorption)
-  float power = this->_mesh->getMaterial()->getReflectPower();
-  proxy->glUniform1fv(FragmentAttribute::UNIFORM_REFLECTIVE_POWER, 1, &power);
+  proxy->glUniformMatrix3fv(this->u_normalModel, 1, GL_FALSE, glm::value_ptr(this->_normalModel));
+  proxy->glUniformMatrix4fv(this->u_modelToWorld, 1, GL_FALSE, glm::value_ptr(this->_modelToWorld));
+  proxy->glUniformMatrix4fv(this->u_modelToProjection, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
+  // Set Colors
+  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformAmbient(), 1, glm::value_ptr(this->_mesh->getMaterial()->getAmbientColor()));
+  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformDiffuse(), 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
+  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformSpecular(), 1, glm::value_ptr(this->_mesh->getMaterial()->getSpecularColor()));
   // Set Shine Power (light reflection strength)
-  power = this->_mesh->getMaterial()->getShinePower();
-  proxy->glUniform1fv(FragmentAttribute::UNIFORM_SHINE_POWER, 1, &power);
+  float power = this->_mesh->getMaterial()->getShinePower();
+  proxy->glUniform1fv(this->_mesh->getMaterial()->getUniformShininess(), 1, &power);
 }
 
 void RenderObject::bind(GLuint vao, std::shared_ptr<OpenGLFunctionProxy> &proxy)

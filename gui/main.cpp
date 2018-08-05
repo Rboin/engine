@@ -52,7 +52,7 @@ Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, 
 }
 
 template<class T>
-T *createRenderObject(float colorPower, float shinePower, glm::vec3 color)
+T *createRenderObject(float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
   std::vector<glm::vec3> vertices = {
     // Positions
@@ -200,9 +200,7 @@ T *createRenderObject(float colorPower, float shinePower, glm::vec3 color)
   t->addTexture(texture1);
   t->addTexture(texture2);
 
-  Material *mat = new Material(colorPower, shinePower, color,
-                               glm::vec4(0.0f, 1.0f, 0.0f, 0.0f),
-                               glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+  Material *mat = new Material(shinePower, ambient, diffuse, specular);
   Mesh *m = new Mesh(0, v, t, mat);
   T *r = new T(m);
   return r;
@@ -211,13 +209,16 @@ T *createRenderObject(float colorPower, float shinePower, glm::vec3 color)
 World<RenderableEntity> *createWorld()
 {
 
-  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, -2.0f),
+  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                glm::vec3(0.0f, 0.0f, 0.0f),
                                                                glm::vec3(1.0f, 1.0f, 1.0f),
                                                                glm::vec3(0.0f, 1.0f, 0.0f),
                                                                glm::vec3(0.0f, 0.0f, -1.0f),
                                                                glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                  createRenderObject<RenderObject>(.2f, 32, glm::vec3(0.5f, 0.5f, 1.0f)));
+                                                  createRenderObject<RenderObject>(32.0f,
+                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                   glm::vec3(0.5f, 0.5f, 0.5f)));
 
   World<RenderableEntity> *world = new World<RenderableEntity>();
   world->addEntity(entity);
@@ -238,21 +239,27 @@ int main(int argc, char **argv)
   World<RenderableEntity> *world = createWorld();
   window.setWorld(world);
   Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
-  {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
-  RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(0.0f, 2.0f, 0.0f),
+  {glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
+  RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(0.0f, 1.0f, 1.0f),
                                                               glm::vec3(0.0f),
                                                               glm::vec3(.25f),
                                                               glm::vec3(0.0f, 1.0f, 0.0f),
                                                               glm::vec3(0.0f, 0.0f, -1.0f),
                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                 createRenderObject<LightRenderObject>(1.0f, 256, glm::vec3(1.0f)));
+                                                 createRenderObject<LightRenderObject>(-1,
+                                                                                       glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                                       glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                       glm::vec3(1.0f, 1.0f, 1.0f)));
   PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 1.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, -1.0f),
                                                                    glm::vec3(1.0f, 0.0f, 0.0f)),
-                                              createRenderObject<RenderObject>(0.0f, 0, glm::vec3(0.0f, 0.0f, 0.0f)));
+                                              createRenderObject<RenderObject>(0,
+                                                                               glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                               glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                               glm::vec3(0.0f, 0.0f, 0.0f)));
   player->setAxis(camera->getAxis());
   world->addEntity(player);
   world->addEntity(light);

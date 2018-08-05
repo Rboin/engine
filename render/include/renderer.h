@@ -29,6 +29,7 @@ public:
   std::shared_ptr<Camera> &getCamera();
 private:
   bool _initialized;
+  int u_cameraPosition;
   GLuint _program;
   std::unique_ptr<Shader> _shader;
   std::shared_ptr<Camera> _camera;
