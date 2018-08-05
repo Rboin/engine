@@ -5,6 +5,12 @@ set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
+if (Qt5_FOUND)
+    if (Qt5_VERSION VERSION_LESS 5.8)
+        message(FATAL_ERROR "Could not find supported Qt5 version (>= 5.8)")
+    endif()
+endif(Qt5_FOUND)
+
 add_definitions(
     ${OPENGL_DEFINITIONS}
     ${QT_DEFINITIONS}
