@@ -28,6 +28,7 @@ public:
 
 protected:
   bool initialized;
+  glm::mat3 _normalModel;
   glm::mat4 _modelToWorld, _modelToProjection;
   std::unique_ptr<Mesh> _mesh;
 

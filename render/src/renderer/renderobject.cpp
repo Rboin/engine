@@ -55,17 +55,19 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
 
 void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-  // Set matrices (model -> world and model -> projection)
+  // Set matrices (normal -> lightDirection, model -> world and model -> projection)
+  proxy->glUniformMatrix3fv(VertexAttribute::UNIFORM_MODEL_NORMAL, 1, GL_FALSE, glm::value_ptr(this->_normalModel));
   proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_WORLD, 1, GL_FALSE, glm::value_ptr(this->_modelToWorld));
   proxy->glUniformMatrix4fv(VertexAttribute::UNIFORM_MODEL_PROJECTION, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
   // Set Color
   glm::vec3 color = this->_mesh->getMaterial()->getAmbientColor();
-  int colorLocation = FragmentAttribute::UNIFORM_OBJECT_COLOR;
-  proxy->glUniform3fv(colorLocation, 1, glm::value_ptr(color));
+  proxy->glUniform3fv(FragmentAttribute::UNIFORM_OBJECT_COLOR, 1, glm::value_ptr(color));
   // Set Color Power (light absorption)
   float power = this->_mesh->getMaterial()->getReflectPower();
-  int powerLocation = FragmentAttribute::UNIFORM_REFLECTIVE_POWER;
-  proxy->glUniform1fv(powerLocation, 1, &power);
+  proxy->glUniform1fv(FragmentAttribute::UNIFORM_REFLECTIVE_POWER, 1, &power);
+  // Set Shine Power (light reflection strength)
+  power = this->_mesh->getMaterial()->getShinePower();
+  proxy->glUniform1fv(FragmentAttribute::UNIFORM_SHINE_POWER, 1, &power);
 }
 
 void RenderObject::bind(GLuint vao, std::shared_ptr<OpenGLFunctionProxy> &proxy)
@@ -90,6 +92,7 @@ void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 
 void RenderObject::updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection)
 {
+  this->_normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
   this->_modelToWorld = model;
   this->_modelToProjection = viewProjection * model;
 }

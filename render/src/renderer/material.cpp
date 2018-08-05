@@ -1,8 +1,9 @@
 #include "material.h"
 
-Material::Material(float power, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
+Material::Material(float reflectPower, float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) :
   _initialized(false),
-  _power(power),
+  _power(reflectPower),
+  _shinePower(shinePower),
   _ambientColor(ambient),
   _diffuseColor(diffuse),
   _specularColor(specular)
@@ -41,4 +42,9 @@ glm::vec3 &Material::getAmbientColor()
 float Material::getReflectPower()
 {
   return this->_power;
+}
+
+float Material::getShinePower()
+{
+  return this->_shinePower;
 }

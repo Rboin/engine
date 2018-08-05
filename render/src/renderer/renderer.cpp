@@ -8,6 +8,7 @@
 
 #include "renderobject.h"
 #include "shaderinformation.h"
+#include "shaderattribute.h"
 
 Renderer::Renderer(std::shared_ptr<Camera> &c) :
   _initialized(false)
@@ -44,8 +45,8 @@ void Renderer::initialize()
   this->_proxy->glAttachShader(this->_program, vShader);
   this->_proxy->glAttachShader(this->_program, fShader);
   this->_proxy->glLinkProgram(this->_program);
-//  this->_proxy->glEnable(GL_BLEND);
-//  this->_proxy->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  this->_proxy->glEnable(GL_BLEND);
+  this->_proxy->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   this->_proxy->glEnable(GL_DEPTH_TEST);
   int status;
   this->_proxy->glGetProgramiv(this->_program, GL_LINK_STATUS, &status);
@@ -91,6 +92,8 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
     this->_proxy->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     this->_proxy->glUseProgram(this->_program);
 
+    glm::vec3 cameraPosition = this->_camera->getPosition();
+    this->_proxy->glUniform3fv(FragmentAttribute::UNIFORM_CAMERA_POSITION, 1, glm::value_ptr(cameraPosition));
     glm::mat4 viewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
     const std::vector<std::unique_ptr<RenderableEntity>> &v = world->getEntities();
     std::vector<std::unique_ptr<RenderableEntity>>::const_iterator iter;

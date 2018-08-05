@@ -51,6 +51,7 @@ public:
   void glBindAttribLocation(GLuint program, GLuint index, const GLchar *name) override;
   GLint glGetAttribLocation(GLuint program, const GLchar *name) override;
   GLint glGetUniformLocation(GLuint program, const GLchar *name) override;
+  void glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
   void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
   void glUniform1fv(GLint location, GLsizei count, const GLfloat *value) override;
   void glUniform3fv(GLint location, GLsizei count, const GLfloat *value) override;

@@ -103,6 +103,11 @@ GLint QtOpenGLProxy::glGetUniformLocation(GLuint program, const GLchar *name)
   return this->_functions->glGetUniformLocation(program, name);
 }
 
+void QtOpenGLProxy::glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+{
+  this->_functions->glUniformMatrix3fv(location, count, transpose, value);
+}
+
 void QtOpenGLProxy::glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
   this->_functions->glUniformMatrix4fv(location, count, transpose, value);

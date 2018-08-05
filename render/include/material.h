@@ -11,7 +11,7 @@
 class Material
 {
 public:
-  Material(float power, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
+  Material(float reflectPower, float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
   void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   bool isInitialized();
   GLint getUniformAmbient() const;
@@ -19,10 +19,11 @@ public:
   GLint getUniformSpecular() const;
   glm::vec3 &getAmbientColor();
   float getReflectPower();
+  float getShinePower();
 private:
   bool _initialized;
   GLint u_ambient, u_diffuse, u_specular;
-  float _power;
+  float _power, _shinePower;
   glm::vec3 _ambientColor, _diffuseColor, _specularColor;
 
 };
