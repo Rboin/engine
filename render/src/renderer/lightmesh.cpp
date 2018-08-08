@@ -1,6 +1,6 @@
 #include "lightmesh.h"
 
-LightMesh::LightMesh(GLuint vao, Vertex *v, Texture *t, Material *m) : Mesh(vao, v, t, m)
+LightMesh::LightMesh(GLuint vao, Vertex *v, Material *m) : Mesh(vao, v, m)
 {
 
 }

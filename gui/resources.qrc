@@ -5,5 +5,6 @@
         <file>resources/images/container.jpg</file>
         <file>resources/images/crate.png</file>
         <file>resources/images/awesomeface.png</file>
+        <file>resources/images/steelborder_woodbox.png</file>
     </qresource>
 </RCC>

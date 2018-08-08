@@ -2,29 +2,26 @@
 
 Texture::Texture()
 {
-  this->_textures = std::vector<std::unique_ptr<TextureImage>>();
 }
 
 void Texture::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-  int i = 0;
-  std::string name = "texture";
-  std::vector<std::unique_ptr<TextureImage>>::iterator it;
-  for (it = this->_textures.begin(); it != this->_textures.end(); ++it) {
-    std::unique_ptr<TextureImage> &currentTexture = (*it);
-    this->initializeTexture(currentTexture, proxy, programId, i, name + std::to_string(i+1));
-    i++;
-  }
+  this->initializeTexture(this->_texture, proxy, programId, 0, "material.diffuse");
 }
 
-void Texture::addTexture(TextureImage *texture)
+void Texture::setTexture(TextureImage *texture)
 {
-  this->_textures.push_back(std::unique_ptr<TextureImage>(texture));
+  this->_texture = std::unique_ptr<TextureImage>(texture);
 }
 
-std::vector<std::unique_ptr<TextureImage> > &Texture::getTextures()
+int Texture::getUniformDiffuse()
 {
-  return this->_textures;
+  return this->u_diffuse;
+}
+
+std::unique_ptr<TextureImage> &Texture::getTextureData()
+{
+  return this->_texture;
 }
 
 void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,
@@ -59,6 +56,6 @@ void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,
   proxy->glGenerateMipMap(GL_TEXTURE_2D);
 
   const char *samplerName = name.c_str();
-  int samplerLocation = proxy->glGetUniformLocation(programId, samplerName);
-  proxy->glUniform1i(samplerLocation, index);
+  this->u_diffuse = proxy->glGetUniformLocation(programId, samplerName);
+  proxy->glUniform1i(this->u_diffuse, index);
 }

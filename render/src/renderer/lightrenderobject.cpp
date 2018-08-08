@@ -47,7 +47,7 @@ void LightRenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFuncti
   proxy->glUniform3fv(this->u_position, 1, glm::value_ptr(this->_currentPosition));
   // Set Light uniform color
   proxy->glUniform3fv(this->u_ambient, 1, glm::value_ptr(this->_mesh->getMaterial()->getAmbientColor()));
-  proxy->glUniform3fv(this->u_diffuse, 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
+//  proxy->glUniform3fv(this->u_diffuse, 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
   proxy->glUniform3fv(this->u_specular, 1, glm::value_ptr(this->_mesh->getMaterial()->getSpecularColor()));
   RenderObject::setUniforms(program, proxy);
 }

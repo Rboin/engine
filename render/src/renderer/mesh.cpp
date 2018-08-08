@@ -2,14 +2,13 @@
 
 Mesh::Mesh()
 {
-  Mesh(0, nullptr, nullptr, nullptr);
+  Mesh(0, nullptr, nullptr);
 }
 
-Mesh::Mesh(GLuint vao, Vertex *v, Texture *t, Material *m) : _initialized(false)
+Mesh::Mesh(GLuint vao, Vertex *v, Material *m) : _initialized(false)
 {
   this->_vao = vao;
   this->_vertex = std::unique_ptr<Vertex>(v);
-  this->_texture = std::unique_ptr<Texture>(t);
   this->_material = std::unique_ptr<Material>(m);
 }
 
@@ -20,7 +19,6 @@ void Mesh::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &pr
   proxy->glGenVertexArrays(1, &this->_vao);
   proxy->glBindVertexArray(this->_vao);
   this->_vertex->initialize(programId, proxy);
-  this->_texture->initialize(programId, proxy);
   this->_material->initialize(programId, proxy);
   proxy->glBindVertexArray(0);
   this->_vertex->deleteBuffers(proxy);
@@ -52,14 +50,9 @@ std::unique_ptr<Vertex> &Mesh::getVertex()
   return this->_vertex;
 }
 
-void Mesh::setTexture(Texture *t)
-{
-  this->_texture = std::unique_ptr<Texture>(t);
-}
-
 std::unique_ptr<Texture> &Mesh::getTexture()
 {
-  return this->_texture;
+  return this->_material->getTexture();
 }
 
 void Mesh::setMaterial(Material *m)

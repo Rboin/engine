@@ -9,7 +9,7 @@
 #include "playableentity.h"
 #include "openglwindow.h"
 #include "fpscamera.h"
-#include "qtopenglproxy.h"
+#include "qtopenglproxy.hpp"
 
 TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internalFormat, int nChannels)
 {
@@ -194,14 +194,14 @@ T *createRenderObject(float shinePower, glm::vec3 ambient, glm::vec3 diffuse, gl
     glm::vec2(1.0f, 0.0f),
     glm::vec2(0.5f, 1.0f)
   };
-  TextureImage *texture1 = loadImage(":/resources/images/container.jpg", GL_RGB, GL_RGB, 3);
-  TextureImage *texture2 = loadImage(":/resources/images/awesomeface.png", GL_RGBA, GL_RGB, 4);
+  TextureImage *texture1 = loadImage(":/resources/images/steelborder_woodbox.png", GL_RGBA, GL_RGB, 4);
+//  TextureImage *texture2 = loadImage(":/resources/images/awesomeface.png", GL_RGBA, GL_RGB, 4);
   Texture *t = new Texture();
-  t->addTexture(texture1);
-  t->addTexture(texture2);
+  t->setTexture(texture1);
+//  t->addTexture(texture2);
 
-  Material *mat = new Material(shinePower, ambient, diffuse, specular);
-  Mesh *m = new Mesh(0, v, t, mat);
+  Material *mat = new Material(shinePower, ambient, t, specular);
+  Mesh *m = new Mesh(0, v, mat);
   T *r = new T(m);
   return r;
 }

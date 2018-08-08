@@ -6,7 +6,7 @@
 class LightMesh : public Mesh
 {
 public:
-  LightMesh(GLuint vao, Vertex *v, Texture *t, Material* m);
+  LightMesh(GLuint vao, Vertex *v, Material* m);
 
 
   // Mesh interface

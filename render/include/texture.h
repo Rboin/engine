@@ -20,10 +20,12 @@ class Texture
 public:
   Texture();
   void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
-  void addTexture(TextureImage *texture);
-  std::vector<std::unique_ptr<TextureImage>> &getTextures();
+  void setTexture(TextureImage *texture);
+  int getUniformDiffuse();
+  std::unique_ptr<TextureImage> &getTextureData();
 private:
-  std::vector<std::unique_ptr<TextureImage>> _textures;
+  int u_diffuse;
+  std::unique_ptr<TextureImage> _texture;
 
   void initializeTexture(std::unique_ptr<TextureImage> &textureData,
                          std::shared_ptr<OpenGLFunctionProxy> &proxy,

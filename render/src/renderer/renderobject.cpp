@@ -72,7 +72,7 @@ void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionPro
   proxy->glUniformMatrix4fv(this->u_modelToProjection, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
   // Set Colors
   proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformAmbient(), 1, glm::value_ptr(this->_mesh->getMaterial()->getAmbientColor()));
-  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformDiffuse(), 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
+//  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformDiffuse(), 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
   proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformSpecular(), 1, glm::value_ptr(this->_mesh->getMaterial()->getSpecularColor()));
   // Set Shine Power (light reflection strength)
   float power = this->_mesh->getMaterial()->getShinePower();
@@ -91,12 +91,16 @@ void RenderObject::unbind(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 
 void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-  std::vector<std::unique_ptr<TextureImage>> &textures = this->_mesh->getTexture()->getTextures();
-  for (unsigned int i = 0; i < textures.size(); i++) {
-    std::unique_ptr<TextureImage> &currentTexture = textures.at(i);
-    proxy->glActiveTexture(GL_TEXTURE0 + i);
-    proxy->glBindTexture(GL_TEXTURE_2D, currentTexture->texture);
-  }
+  std::unique_ptr<Texture> &texture = this->_mesh->getMaterial()->getTexture();
+  proxy->glUniform1i(texture->getUniformDiffuse(), 0);
+  proxy->glActiveTexture(GL_TEXTURE0);
+  proxy->glBindTexture(GL_TEXTURE_2D, texture->getTextureData()->texture);
+
+//  for (unsigned int i = 0; i < textures.size(); i++) {
+//    std::unique_ptr<TextureImage> &currentTexture = textures.at(i);
+//    proxy->glActiveTexture(GL_TEXTURE0 + i);
+//    proxy->glBindTexture(GL_TEXTURE_2D, currentTexture->texture);
+//  }
 }
 
 void RenderObject::updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection)

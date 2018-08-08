@@ -7,7 +7,7 @@
 #include <QElapsedTimer>
 
 #include "glm/glm.hpp"
-#include "qtopenglproxy.h"
+#include "qtopenglproxy.hpp"
 #include "world.hpp"
 #include "renderer.h"
 
