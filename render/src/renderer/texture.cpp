@@ -8,6 +8,7 @@ void Texture::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> 
 {
   this->initializeTexture(this->_diffuseTexture, proxy, programId, 0, "material.diffuse", this->u_diffuse);
   this->initializeTexture(this->_specularTexture, proxy, programId, 1, "material.specular", this->u_specular);
+  this->initializeTexture(this->_emissionTexture, proxy, programId, 2, "material.emission", this->u_emission);
 }
 
 void Texture::setDiffuseTexture(TextureImage *texture)
@@ -20,6 +21,11 @@ void Texture::setSpecularTexture(TextureImage *texture)
   this->_specularTexture = std::unique_ptr<TextureImage>(texture);
 }
 
+void Texture::setEmissionTexture(TextureImage *texture)
+{
+  this->_emissionTexture = std::unique_ptr<TextureImage>(texture);
+}
+
 int Texture::getUniformDiffuse()
 {
   return this->u_diffuse;
@@ -30,6 +36,11 @@ int Texture::getUniformSpecular()
   return this->u_specular;
 }
 
+int Texture::getUniformEmission()
+{
+  return this->u_emission;
+}
+
 std::unique_ptr<TextureImage> &Texture::getDiffuseTexture()
 {
   return this->_diffuseTexture;
@@ -38,6 +49,11 @@ std::unique_ptr<TextureImage> &Texture::getDiffuseTexture()
 std::unique_ptr<TextureImage> &Texture::getSpecularTexture()
 {
   return this->_specularTexture;
+}
+
+std::unique_ptr<TextureImage> &Texture::getEmissionTexture()
+{
+  return this->_emissionTexture;
 }
 
 void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,

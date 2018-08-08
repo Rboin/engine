@@ -48,6 +48,7 @@ public:
   virtual GLint glGetUniformLocation(GLuint program, const GLchar *name) = 0;
   virtual void glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) = 0;
   virtual void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) = 0;
+  virtual void glUniform1f(GLint location, GLfloat v0) = 0;
   virtual void glUniform1fv(GLint location, GLsizei count, const GLfloat *value) = 0;
   virtual void glUniform3fv(GLint location, GLsizei count, const GLfloat *value) = 0;
   virtual void glUniform4fv(GLint location, GLsizei count, const GLfloat *value) = 0;

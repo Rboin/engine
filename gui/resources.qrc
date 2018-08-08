@@ -7,5 +7,7 @@
         <file>resources/images/awesomeface.png</file>
         <file>resources/images/steelborder_woodbox.png</file>
         <file>resources/images/container2_specular.png</file>
+        <file>resources/images/default.png</file>
+        <file>resources/images/matrix.jpg</file>
     </qresource>
 </RCC>

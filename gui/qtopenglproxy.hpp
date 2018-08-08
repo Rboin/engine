@@ -204,6 +204,11 @@ public:
     this->_functions->glUniformMatrix4fv(location, count, transpose, value);
   }
 
+  void glUniform1f(GLint location, GLfloat v0) override
+  {
+    this->_functions->glUniform1f(location, v0);
+  }
+
   void glUniform1fv(GLint location, GLsizei count, const GLfloat *value) override
   {
     this->_functions->glUniform1fv(location, count, value);

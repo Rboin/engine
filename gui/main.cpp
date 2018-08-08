@@ -52,7 +52,9 @@ Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, 
 }
 
 template<class T>
-T *createRenderObject(float shinePower, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, const char *diffusePath, const char *specularPath)
+T *createRenderObject(float shinePower,
+                      const char *diffusePath, const char *specularPath, const char *emissionPath,
+                      glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
   std::vector<glm::vec3> vertices = {
     // Positions
@@ -189,18 +191,15 @@ T *createRenderObject(float shinePower, glm::vec3 ambient, glm::vec3 diffuse, gl
   vData->vertices = vertices;
   vData->indices = indices;
   Vertex *v = new Vertex(vData);
-  std::vector<glm::vec2> texture = {
-    glm::vec2(0.0f, 0.0f),
-    glm::vec2(1.0f, 0.0f),
-    glm::vec2(0.5f, 1.0f)
-  };
-  TextureImage *texture1 = loadImage(diffusePath, GL_RGBA, GL_RGB, 4);
-  TextureImage *texture2 = loadImage(specularPath, GL_RGBA, GL_RGB, 4);
+  TextureImage *diffuseTexture = loadImage(diffusePath, GL_RGBA, GL_RGB, 4);
+  TextureImage *specularTexture = loadImage(specularPath, GL_RGBA, GL_RGB, 4);
+  TextureImage *emissionTexture = loadImage(emissionPath, GL_RGB, GL_RGB, 3);
   Texture *t = new Texture();
-  t->setDiffuseTexture(texture1);
-  t->setSpecularTexture(texture2);
+  t->setDiffuseTexture(diffuseTexture);
+  t->setSpecularTexture(specularTexture);
+  t->setEmissionTexture(emissionTexture);
 
-  Material *mat = new Material(shinePower, ambient, t, specular);
+  Material *mat = new Material(shinePower, t, ambient, diffuse, specular);
   Mesh *m = new Mesh(0, v, mat);
   T *r = new T(m);
   return r;
@@ -216,11 +215,12 @@ World<RenderableEntity> *createWorld()
                                                                glm::vec3(0.0f, 0.0f, -1.0f),
                                                                glm::vec3(1.0f, 0.0f, 0.0f)),
                                                   createRenderObject<RenderObject>(32.0f,
-                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                                   glm::vec3(0.5f, 0.5f, 0.5f),
                                                                                    ":/resources/images/steelborder_woodbox.png",
-                                                                                   ":/resources/images/container2_specular.png"));
+                                                                                   ":/resources/images/container2_specular.png",
+                                                                                   ":/resources/images/matrix.jpg",
+                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                   glm::vec3(0.5f, 0.5f, 0.5f)));
 
   World<RenderableEntity> *world = new World<RenderableEntity>();
   world->addEntity(entity);
@@ -242,6 +242,7 @@ int main(int argc, char **argv)
   window.setWorld(world);
   Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
   {glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
+
   RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.5f, 1.0f),
                                                               glm::vec3(0.0f),
                                                               glm::vec3(.25f),
@@ -249,11 +250,15 @@ int main(int argc, char **argv)
                                                               glm::vec3(0.0f, 0.0f, -1.0f),
                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
                                                  createRenderObject<LightRenderObject>(-1,
+                                                                                       ":/resources/images/awesomeface.png",
+                                                                                       ":/resources/images/awesomeface.png",
+                                                                                       ":/resources/images/awesomeface.png",
                                                                                        glm::vec3(0.2f, 0.2f, 0.2f),
                                                                                        glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                                       glm::vec3(1.0f, 1.0f, 1.0f),
-                                                                                       ":/resources/images/crate.png",
-                                                                                       ":/resources/images/awesomeface.png"));
+                                                                                       glm::vec3(1.0f, 1.0f, 1.0f)));
+  std::unique_ptr<LightRenderObject> &lro = (std::unique_ptr<LightRenderObject> &) light->getRenderObject();
+  lro->setIsPointLight(true);
+
   PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
@@ -261,11 +266,12 @@ int main(int argc, char **argv)
                                                                    glm::vec3(0.0f, 0.0f, -1.0f),
                                                                    glm::vec3(1.0f, 0.0f, 0.0f)),
                                               createRenderObject<RenderObject>(0,
+                                                                               ":/resources/images/default.png",
+                                                                               ":/resources/images/default.png",
+                                                                               ":/resources/images/default.png",
                                                                                glm::vec3(0.0f, 0.0f, 0.0f),
                                                                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                               glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                               ":/resources/images/crate.png",
-                                                                               ":/resources/images/awesomeface.png"));
+                                                                               glm::vec3(0.0f, 0.0f, 0.0f)));
   Renderer renderer(player->getCamera());
   player->setAxis(camera->getAxis());
   world->addEntity(player);
