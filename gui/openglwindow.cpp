@@ -78,7 +78,7 @@ void OpenGLWindow::initializeFunctionProxy()
       qWarning() << "Could not get the version functions...";
     }
     f->initializeOpenGLFunctions();
-    this->functions = std::make_shared<QtOpenGLProxy>(f);
+    this->functions = std::make_shared<QtOpenGLProxy<QOpenGLFunctions_4_3_Core>>(f);
     if (!this->renderer->hasFunctions()) {
       this->renderer->setFunctions(this->functions);
     }

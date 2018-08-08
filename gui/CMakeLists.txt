@@ -6,7 +6,7 @@ find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
 if (Qt5_FOUND)
-    if (Qt5_VERSION VERSION_LESS 5.8)
+    if (Qt5_VERSION VERSION_LESS 5.11.1)
         message(FATAL_ERROR "Could not find supported Qt5 version (>= 5.8)")
     endif()
 endif(Qt5_FOUND)
@@ -32,7 +32,7 @@ include_directories(
 
 set(SOURCES
     openglwindow.h openglwindow.cpp
-    qtopenglproxy.h qtopenglproxy.cpp
+    qtopenglproxy.hpp
     resources.qrc
 )
 

@@ -1,2 +1,9 @@
+.vscode
+**/**/bin
+**/**/lib
+**/**/CMakeCache.txt
 CMakeLists.txt.user
 **/**/.directory
+**/**/*.cmake
+**/**/CMakeFiles
+**/**/Makefile

@@ -44,5 +44,5 @@ void main() {
 
     // Resulting color
     vec3 resultingColor = ambient + diffuse + specular;
-    color = vec4(resultingColor, 1.0);// * mix(texture(texture1, TextureCoordinate), texture(texture2, TextureCoordinate), 0.2);
+    color = (2 * vec4(resultingColor, 1.0));// * mix(texture(texture1, TextureCoordinate), texture(texture2, TextureCoordinate), 0.2);
 }

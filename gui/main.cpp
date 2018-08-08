@@ -260,10 +260,11 @@ int main(int argc, char **argv)
                                                                                glm::vec3(0.0f, 0.0f, 0.0f),
                                                                                glm::vec3(0.0f, 0.0f, 0.0f),
                                                                                glm::vec3(0.0f, 0.0f, 0.0f)));
+  Renderer renderer(player->getCamera());
   player->setAxis(camera->getAxis());
   world->addEntity(player);
   world->addEntity(light);
-  window.setRenderer(new Renderer(player->getCamera()));
+  window.setRenderer(&renderer);
   window.setHeight(720);
   window.setWidth(1280);
   window.initialize();
