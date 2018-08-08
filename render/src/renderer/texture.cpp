@@ -6,12 +6,18 @@ Texture::Texture()
 
 void Texture::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
-  this->initializeTexture(this->_texture, proxy, programId, 0, "material.diffuse");
+  this->initializeTexture(this->_diffuseTexture, proxy, programId, 0, "material.diffuse", this->u_diffuse);
+  this->initializeTexture(this->_specularTexture, proxy, programId, 1, "material.specular", this->u_specular);
 }
 
-void Texture::setTexture(TextureImage *texture)
+void Texture::setDiffuseTexture(TextureImage *texture)
 {
-  this->_texture = std::unique_ptr<TextureImage>(texture);
+  this->_diffuseTexture = std::unique_ptr<TextureImage>(texture);
+}
+
+void Texture::setSpecularTexture(TextureImage *texture)
+{
+  this->_specularTexture = std::unique_ptr<TextureImage>(texture);
 }
 
 int Texture::getUniformDiffuse()
@@ -19,16 +25,26 @@ int Texture::getUniformDiffuse()
   return this->u_diffuse;
 }
 
-std::unique_ptr<TextureImage> &Texture::getTextureData()
+int Texture::getUniformSpecular()
 {
-  return this->_texture;
+  return this->u_specular;
+}
+
+std::unique_ptr<TextureImage> &Texture::getDiffuseTexture()
+{
+  return this->_diffuseTexture;
+}
+
+std::unique_ptr<TextureImage> &Texture::getSpecularTexture()
+{
+  return this->_specularTexture;
 }
 
 void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,
                                 std::shared_ptr<OpenGLFunctionProxy> &proxy,
                                 GLuint programId,
                                 int index,
-                                std::string name)
+                                std::string name, int &uniform)
 {
   // Generate texture ID.
   proxy->glGenTextures(1, &textureData->texture);
@@ -56,6 +72,6 @@ void Texture::initializeTexture(std::unique_ptr<TextureImage> &textureData,
   proxy->glGenerateMipMap(GL_TEXTURE_2D);
 
   const char *samplerName = name.c_str();
-  this->u_diffuse = proxy->glGetUniformLocation(programId, samplerName);
+  uniform = proxy->glGetUniformLocation(programId, samplerName);
   proxy->glUniform1i(this->u_diffuse, index);
 }

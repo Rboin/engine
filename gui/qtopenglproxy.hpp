@@ -254,6 +254,16 @@ public:
     this->_functions->glBlendFunc(sfactor, dfactor);
   }
 
+  void glCullFace(GLenum mode) override
+  {
+    this->_functions->glCullFace(mode);
+  }
+
+  void glFrontFace(GLenum mode) override
+  {
+    this->_functions->glFrontFace(mode);
+  }
+
   const GLubyte *glGetString(GLenum name) override
   {
     return this->_functions->glGetString(name);
@@ -263,7 +273,6 @@ public:
   {
     this->_functions->glViewport(x, y, width, height);
   }
-
 };
 
 #endif // QTOPENGLPROXY_HPP

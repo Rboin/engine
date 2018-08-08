@@ -49,6 +49,8 @@ void Renderer::initialize()
   this->_proxy->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   this->_proxy->glEnable(GL_DEPTH_TEST);
   this->_proxy->glEnable(GL_LIGHTING);
+//  this->_proxy->glEnable(GL_CULL_FACE);
+//  this->_proxy->glCullFace(GL_FRONT);
   int status;
   this->_proxy->glGetProgramiv(this->_program, GL_LINK_STATUS, &status);
   if(!status) {

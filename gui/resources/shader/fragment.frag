@@ -2,8 +2,7 @@
 
 struct Material {
     sampler2D diffuse;
-    vec3 ambient;
-    vec3 specular;
+    sampler2D specular;
     float shininess;
 };
 
@@ -38,9 +37,8 @@ void main() {
     vec3 viewDirection = normalize(cameraPosition - FragmentPosition);
     vec3 reflectDirection = reflect(-lightRayDirection, normalized);
     float specularScalar = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-    vec3 specular = light.specular * (specularScalar * material.specular);
+    vec3 specular = light.specular * specularScalar * vec3(texture(material.specular, TextureCoordinate));
 
     // Resulting color
-    vec3 resultingColor = ambient + diffuse + specular;
-    color = (2 * vec4(resultingColor, 1.0));// * mix(texture(texture1, TextureCoordinate), texture(texture2, TextureCoordinate), 0.2);
+    color = vec4(ambient + diffuse + specular, 1.0);
 }

@@ -70,10 +70,6 @@ void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionPro
   proxy->glUniformMatrix3fv(this->u_normalModel, 1, GL_FALSE, glm::value_ptr(this->_normalModel));
   proxy->glUniformMatrix4fv(this->u_modelToWorld, 1, GL_FALSE, glm::value_ptr(this->_modelToWorld));
   proxy->glUniformMatrix4fv(this->u_modelToProjection, 1, GL_FALSE, glm::value_ptr(this->_modelToProjection));
-  // Set Colors
-  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformAmbient(), 1, glm::value_ptr(this->_mesh->getMaterial()->getAmbientColor()));
-//  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformDiffuse(), 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
-  proxy->glUniform3fv(this->_mesh->getMaterial()->getUniformSpecular(), 1, glm::value_ptr(this->_mesh->getMaterial()->getSpecularColor()));
   // Set Shine Power (light reflection strength)
   float power = this->_mesh->getMaterial()->getShinePower();
   proxy->glUniform1fv(this->_mesh->getMaterial()->getUniformShininess(), 1, &power);
@@ -94,7 +90,10 @@ void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
   std::unique_ptr<Texture> &texture = this->_mesh->getMaterial()->getTexture();
   proxy->glUniform1i(texture->getUniformDiffuse(), 0);
   proxy->glActiveTexture(GL_TEXTURE0);
-  proxy->glBindTexture(GL_TEXTURE_2D, texture->getTextureData()->texture);
+  proxy->glBindTexture(GL_TEXTURE_2D, texture->getDiffuseTexture()->texture);
+  proxy->glUniform1i(texture->getUniformSpecular(), 1);
+  proxy->glActiveTexture(GL_TEXTURE1);
+  proxy->glBindTexture(GL_TEXTURE_2D, texture->getSpecularTexture()->texture);
 
 //  for (unsigned int i = 0; i < textures.size(); i++) {
 //    std::unique_ptr<TextureImage> &currentTexture = textures.at(i);
