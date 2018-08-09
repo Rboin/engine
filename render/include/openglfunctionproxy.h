@@ -17,7 +17,7 @@ public:
   // Shader
   virtual GLuint glCreateShader(GLenum type) = 0;
   virtual void glAttachShader(GLuint program, GLuint shader) = 0;
-  virtual void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length) = 0;
+  virtual void glShaderSource(GLuint shader, GLsizei count, const char **string, const GLint *length) = 0;
   virtual void glCompileShader(GLuint shader) = 0;
   virtual void glDeleteShader(GLuint shader) = 0;
   virtual void glGetShaderiv(GLuint shader, GLenum pname, GLint *params) = 0;

@@ -61,7 +61,7 @@ public:
     this->_functions->glAttachShader(program, shader);
   }
 
-  void glShaderSource(GLuint shader, GLsizei count, const GLchar * const *string, const GLint *length) override
+  void glShaderSource(GLuint shader, GLsizei count, const char **string, const GLint *length) override
   {
     this->_functions->glShaderSource(shader, count, string, length);
   }

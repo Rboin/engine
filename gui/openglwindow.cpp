@@ -1,6 +1,8 @@
 #include "openglwindow.h"
 
 #include <QFile>
+#include <QOpenGLExtraFunctions>
+#include <QOpenGLFunctions>
 #include <QOpenGLFunctions_4_3_Core>
 #include <QResizeEvent>
 #include <QtDebug>
@@ -73,12 +75,12 @@ void OpenGLWindow::initializeFunctionProxy()
   bool created = this->openglContext->create();
   if(created) {
     this->openglContext->makeCurrent(this);
-    QOpenGLFunctions_4_3_Core *f = this->openglContext->versionFunctions<QOpenGLFunctions_4_3_Core>();
+    QOpenGLExtraFunctions *f = this->openglContext->extraFunctions();
     if(!f) {
       qWarning() << "Could not get the version functions...";
     }
     f->initializeOpenGLFunctions();
-    this->functions = std::make_shared<QtOpenGLProxy<QOpenGLFunctions_4_3_Core>>(f);
+    this->functions = std::make_shared<QtOpenGLProxy<QOpenGLExtraFunctions>>(f);
     if (!this->renderer->hasFunctions()) {
       this->renderer->setFunctions(this->functions);
     }
