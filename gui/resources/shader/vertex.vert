@@ -18,5 +18,5 @@ void main()
    FragmentPosition = vec3(modelToWorld * vec4(position, 1.0));
    Normal = normalModel * normal;
 
-   gl_Position = modelToProjection * vec4(FragmentPosition, 1.0);
+   gl_Position = modelToProjection * vec4(position, 1.0);
 }

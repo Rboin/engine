@@ -193,7 +193,7 @@ T *createRenderObject(float shinePower,
   Vertex *v = new Vertex(vData);
   TextureImage *diffuseTexture = loadImage(diffusePath, GL_RGBA, GL_RGB, 4);
   TextureImage *specularTexture = loadImage(specularPath, GL_RGBA, GL_RGB, 4);
-  TextureImage *emissionTexture = loadImage(emissionPath, GL_RGB, GL_RGB, 3);
+  TextureImage *emissionTexture = loadImage(emissionPath, GL_RGBA, GL_RGBA, 4);
   Texture *t = new Texture();
   t->setDiffuseTexture(diffuseTexture);
   t->setSpecularTexture(specularTexture);
@@ -243,21 +243,21 @@ int main(int argc, char **argv)
   Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
   {glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
 
-  RenderableEntity *light = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.5f, 1.0f),
-                                                              glm::vec3(0.0f),
-                                                              glm::vec3(.25f),
-                                                              glm::vec3(0.0f, 1.0f, 0.0f),
-                                                              glm::vec3(0.0f, 0.0f, -1.0f),
-                                                              glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                 createRenderObject<LightRenderObject>(-1,
-                                                                                       ":/resources/images/awesomeface.png",
-                                                                                       ":/resources/images/awesomeface.png",
-                                                                                       ":/resources/images/awesomeface.png",
-                                                                                       glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                                       glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                                       glm::vec3(1.0f, 1.0f, 1.0f)));
-  std::unique_ptr<LightRenderObject> &lro = (std::unique_ptr<LightRenderObject> &) light->getRenderObject();
-  lro->setIsPointLight(true);
+  RenderableEntity *light1 = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.5f, -1.0f),
+                                                               glm::vec3(0.0f),
+                                                               glm::vec3(0.1f),
+                                                               glm::vec3(0.0f, 1.0f, 0.0f),
+                                                               glm::vec3(0.0f, 0.0f, -1.0f),
+                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
+                                                  createRenderObject<LightRenderObject>(-1,
+                                                                                        ":/resources/images/awesomeface.png",
+                                                                                        ":/resources/images/awesomeface.png",
+                                                                                        ":/resources/images/default.png",
+                                                                                        glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                                        glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                        glm::vec3(1.0f, 1.0f, 1.0f)));
+  std::unique_ptr<LightRenderObject> &lro1 = (std::unique_ptr<LightRenderObject> &) light1->getRenderObject();
+  lro1->setIsPointLight(true);
 
   PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
                                                                    glm::vec3(0.0f, 0.0f, 0.0f),
@@ -275,7 +275,7 @@ int main(int argc, char **argv)
   Renderer renderer(player->getCamera());
   player->setAxis(camera->getAxis());
   world->addEntity(player);
-  world->addEntity(light);
+  world->addEntity(light1);
   window.setRenderer(&renderer);
   window.setHeight(720);
   window.setWidth(1280);

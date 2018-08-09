@@ -70,8 +70,8 @@ void Entity::update(const float &delta)
 void Entity::updateModelMatrix()
 {
   this->_translate = glm::translate(glm::mat4(1.0f), this->_position);
-  this->_rotate = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.x), glm::vec3(0.0f, 1.0f, 0.0f));
-  this->_rotate = glm::rotate(this->_rotate, glm::radians(this->_rotation.y), glm::vec3(1.0f, 0.0f, 0.0f));
+  this->_rotate = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+  this->_rotate = glm::rotate(this->_rotate, glm::radians(this->_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
   this->_rotate = glm::rotate(this->_rotate, glm::radians(this->_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
   this->_scale = glm::scale(glm::mat4(1.0f), this->_scaling);
   this->_model = this->_translate * this->_rotate * this->_scale;
