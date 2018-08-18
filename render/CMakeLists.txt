@@ -37,7 +37,6 @@ set(SOURCE_FILES
     src/entities/renderableentity.cpp
     src/entities/playableentity.cpp
     src/renderer/lightrenderobject.cpp
-    src/renderer/lightmesh.h src/renderer/lightmesh.cpp
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

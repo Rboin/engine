@@ -4,6 +4,11 @@ Texture::Texture()
 {
 }
 
+Texture::~Texture()
+{
+
+}
+
 void Texture::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   this->initializeTexture(this->_diffuseTexture, proxy, programId, 0, "material.diffuse", this->u_diffuse);

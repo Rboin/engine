@@ -7,10 +7,7 @@ Material::Material(float shinePower, Texture *texture, glm::vec3 ambient, glm::v
   _ambientColor(ambient),
   _diffuseColor(diffuse),
   _specularColor(specular),
-  u_shinePower(-1),
-  u_ambient(-1),
-  u_diffuse(-1),
-  u_specular(-1)
+  u_shinePower(-1)
 {}
 
 void Material::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
@@ -39,21 +36,6 @@ bool Material::isInitialized()
 int Material::getUniformShininess() const
 {
   return this->u_shinePower;
-}
-
-GLint Material::getUniformAmbient() const
-{
-  return this->u_ambient;
-}
-
-GLint Material::getUniformDiffuse() const
-{
-  return this->u_diffuse;
-}
-
-GLint Material::getUniformSpecular() const
-{
-  return this->u_specular;
 }
 
 glm::vec3 &Material::getAmbientColor()

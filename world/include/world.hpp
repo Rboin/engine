@@ -57,7 +57,8 @@ public:
   {
     typename std::vector<std::unique_ptr<T>>::iterator it;
     for (it = this->entities.begin(); it != this->entities.end(); it++) {
-      (*it).get()->update(delta);
+      std::unique_ptr<T> &current = (*it);
+      current->update(delta);
     }
   }
 

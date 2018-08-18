@@ -9,13 +9,18 @@
 class PlayableEntity : public RenderableEntity
 {
 public:
-  PlayableEntity(Camera *c, Entity *e, RenderObject *r);
+  PlayableEntity(std::shared_ptr<Camera> c, RenderObject *r);
 
   std::shared_ptr<Camera> &getCamera();
 
   void update(const float &delta) override;
 private:
   std::shared_ptr<Camera> _camera;
+
+  // Entity interface
+public:
+  void setPosition(glm::vec3 p) override;
+  void setRotation(glm::vec3 r) override;
 };
 
 #endif // PLAYABLEENTITY_H

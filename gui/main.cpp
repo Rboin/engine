@@ -3,8 +3,10 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileInfo>
-#include <lightrenderobject.h>
-#include <transformcomponent.h>
+
+#include "lightrenderobject.h"
+#include "transformcomponent.h"
+#include "componentlist.hpp"
 
 #include "movingentity.h"
 #include "playableentity.h"
@@ -42,11 +44,10 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 
 
-Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, glm::vec3 up, glm::vec3 forward, glm::vec3 right)
+Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
 {
-  std::shared_ptr<Axis> axis = std::make_shared<Axis>(up, forward, right);
-  Entity *e = new MovingEntity(axis);
-  e->addComponent(new TransformComponent(position, rotation, scaling));
+  auto *e = new MovingEntity();
+//  e->addComponent(new TransformComponent(position, rotation, scaling));
   e->setPosition(position);
   e->setRotation(rotation);
   e->setScaling(scaling);
@@ -209,24 +210,7 @@ T *createRenderObject(float shinePower,
 
 World<RenderableEntity> *createWorld()
 {
-
-  RenderableEntity *entity = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
-                                                               glm::vec3(0.0f, 0.0f, 0.0f),
-                                                               glm::vec3(1.0f, 1.0f, 1.0f),
-                                                               glm::vec3(0.0f, 1.0f, 0.0f),
-                                                               glm::vec3(0.0f, 0.0f, -1.0f),
-                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                  createRenderObject<RenderObject>(32.0f,
-                                                                                   ":/resources/images/steelborder_woodbox.png",
-                                                                                   ":/resources/images/container2_specular.png",
-                                                                                   ":/resources/images/matrix.jpg",
-                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                                   glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                                   glm::vec3(0.5f, 0.5f, 0.5f)));
-
-  World<RenderableEntity> *world = new World<RenderableEntity>();
-  world->addEntity(entity);
-  return world;
+  return new World<RenderableEntity>();
 }
 
 int main(int argc, char **argv)
@@ -240,49 +224,67 @@ int main(int argc, char **argv)
   format.setSamples(4);
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
+
   World<RenderableEntity> *world = createWorld();
   window.setWorld(world);
-  Camera *camera = new FPSCamera({45.0f, 0.1f, 100.0f},
-  {glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)});
 
-  RenderableEntity *light1 = new RenderableEntity(createEntity(glm::vec3(0.0f, 0.5f, -1.0f),
-                                                               glm::vec3(0.0f),
-                                                               glm::vec3(0.1f),
-                                                               glm::vec3(0.0f, 1.0f, 0.0f),
-                                                               glm::vec3(0.0f, 0.0f, -1.0f),
-                                                               glm::vec3(1.0f, 0.0f, 0.0f)),
-                                                  createRenderObject<LightRenderObject>(-1,
-                                                                                        ":/resources/images/awesomeface.png",
-                                                                                        ":/resources/images/awesomeface.png",
-                                                                                        ":/resources/images/default.png",
-                                                                                        glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                                        glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                                        glm::vec3(1.0f, 1.0f, 1.0f)));
+  std::shared_ptr<Camera> camera = std::shared_ptr<FPSCamera>(
+                                     new FPSCamera({45.0f, 0.1f, 100.0f},
+                                                   glm::vec3(0.0f, 0.0f, -1.0f)
+                                                  )
+                                   );
+
+
+  // BOX
+  auto *box = new RenderableEntity(createRenderObject<RenderObject>(32.0f,
+                                                                    ":/resources/images/steelborder_woodbox.png",
+                                                                    ":/resources/images/container2_specular.png",
+                                                                    ":/resources/images/matrix.jpg",
+                                                                    glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                    glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                    glm::vec3(0.5f, 0.5f, 0.5f)));
+  box->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+  box->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+  box->setScaling(glm::vec3(1.0f, 1.0f, 1.0f));
+
+  auto *light1 = new RenderableEntity(createRenderObject<LightRenderObject>(-1,
+                                                                            ":/resources/images/awesomeface.png",
+                                                                            ":/resources/images/awesomeface.png",
+                                                                            ":/resources/images/default.png",
+                                                                            glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                            glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                            glm::vec3(1.0f, 1.0f, 1.0f)));
+  light1->setPosition(glm::vec3(0.0f, 0.5f, -1.0f));
+  light1->setRotation(glm::vec3(0.0f));
+  light1->setScaling(glm::vec3(0.1f));
+
   std::unique_ptr<LightRenderObject> &lro1 = (std::unique_ptr<LightRenderObject> &) light1->getRenderObject();
   lro1->setIsPointLight(true);
 
-  PlayableEntity *player = new PlayableEntity(camera, createEntity(glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                   glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                   glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                   glm::vec3(0.0f, 1.0f, 0.0f),
-                                                                   glm::vec3(0.0f, 0.0f, -1.0f),
-                                                                   glm::vec3(1.0f, 0.0f, 0.0f)),
-                                              createRenderObject<RenderObject>(0,
-                                                                               ":/resources/images/default.png",
-                                                                               ":/resources/images/default.png",
-                                                                               ":/resources/images/default.png",
-                                                                               glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                               glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                               glm::vec3(0.0f, 0.0f, 0.0f)));
-  Renderer renderer(player->getCamera());
-  player->setAxis(camera->getAxis());
+  auto *player = new PlayableEntity(camera, createRenderObject<RenderObject>(0,
+                                                                             ":/resources/images/default.png",
+                                                                             ":/resources/images/default.png",
+                                                                             ":/resources/images/default.png",
+                                                                             glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                             glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                             glm::vec3(0.0f, 0.0f, 0.0f)));
+  player->setPosition(camera->getPosition());
+  player->setRotation(camera->getRotationVector());
+  player->setScaling(glm::vec3(0.0f, 0.0f, 0.0f));
+  world->addEntity(box);
   world->addEntity(player);
   world->addEntity(light1);
-  window.setRenderer(&renderer);
+
+  window.setRenderer(new Renderer(camera));
+
   window.setHeight(720);
   window.setWidth(1280);
   window.initialize();
   window.show();
+
+  ComponentList tmp;
+  tmp.addComponent(new TransformComponent(box->getId(), box->getPosition(), box->getRotation(), box->getScaling()));
+  std::shared_ptr<TransformComponent> found = tmp.getComponent<TransformComponent>();
 
   return app.exec();
 }

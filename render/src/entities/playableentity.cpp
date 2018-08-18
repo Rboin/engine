@@ -1,9 +1,9 @@
 #include "playableentity.h"
 
-PlayableEntity::PlayableEntity(Camera *c, Entity *e, RenderObject *r) :
-  RenderableEntity(e, r)
+PlayableEntity::PlayableEntity(std::shared_ptr<Camera> c, RenderObject *r) :
+  RenderableEntity(r)
 {
-  this->_camera = std::unique_ptr<Camera>(c);
+  this->_camera = c;
 }
 
 std::shared_ptr<Camera> &PlayableEntity::getCamera()
@@ -13,12 +13,18 @@ std::shared_ptr<Camera> &PlayableEntity::getCamera()
 
 void PlayableEntity::update(const float &delta)
 {
-  this->_camera->update(delta);
-
-  this->setPosition(this->_camera->getPosition() + glm::vec3(0.0f, 0.0f, 0.5f));
-
-  // Inverse the camera's rotation.
-  glm::vec3 rotation = -this->_camera->getRotationVector();
-  this->setRotation(rotation);
   RenderableEntity::update(delta);
+  this->_camera->update(delta);
+}
+
+void PlayableEntity::setPosition(glm::vec3 p)
+{
+  Entity::setPosition(p);
+  this->_camera->setPosition(p);
+}
+
+void PlayableEntity::setRotation(glm::vec3 r)
+{
+  Entity::setRotation(r);
+  this->_camera->setRotation(-r);
 }

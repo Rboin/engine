@@ -1,12 +1,12 @@
 #ifndef MOVINGENTITY_H
 #define MOVINGENTITY_H
 
-#include "entity.h"
+#include "typedentity.hpp"
 
-class MovingEntity : public Entity
+class MovingEntity : public TypedEntity<MovingEntity>
 {
 public:
-  MovingEntity(std::shared_ptr<Axis> &a);
+  MovingEntity();
   ~MovingEntity() override;
 
   // Entity interface

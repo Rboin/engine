@@ -1,7 +1,7 @@
 #include "fpscamera.h"
 
-FPSCamera::FPSCamera(const projection_information &p, const view_information &v) :
-  Camera(p, v)
+FPSCamera::FPSCamera(const projection_information &p, glm::vec3 position) :
+  Camera(p, position)
 {
 
 }

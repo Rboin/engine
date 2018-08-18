@@ -1,4 +1,6 @@
+.idea
 .vscode
+**/**/*.cbp
 **/**/bin
 **/**/lib
 **/**/CMakeCache.txt

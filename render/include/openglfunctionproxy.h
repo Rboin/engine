@@ -1,7 +1,7 @@
 #ifndef OPENGLFUNCTIONOBJECT_H
 #define OPENGLFUNCTIONOBJECT_H
 
-#include "GL/gl.h"
+#include <GL/gl.h>
 
 class OpenGLFunctionProxy
 {
@@ -20,6 +20,7 @@ public:
   virtual void glShaderSource(GLuint shader, GLsizei count, const char **string, const GLint *length) = 0;
   virtual void glCompileShader(GLuint shader) = 0;
   virtual void glDeleteShader(GLuint shader) = 0;
+  virtual void glDetachShader(GLuint program, GLuint shader) = 0;
   virtual void glGetShaderiv(GLuint shader, GLenum pname, GLint *params) = 0;
   virtual void glGetShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog) = 0;
   // Texture

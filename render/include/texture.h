@@ -19,6 +19,7 @@ class Texture
 {
 public:
   Texture();
+  virtual ~Texture();
   void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   void setDiffuseTexture(TextureImage *texture);
   void setSpecularTexture(TextureImage *texture);

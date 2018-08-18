@@ -9,7 +9,7 @@
 #include "renderobject.h"
 #include "shaderinformation.h"
 
-Renderer::Renderer(std::shared_ptr<Camera> &c) :
+Renderer::Renderer(std::shared_ptr<Camera> c) :
   _initialized(false),
   u_cameraPosition(-1)
 {
@@ -19,7 +19,7 @@ Renderer::Renderer(std::shared_ptr<Camera> &c) :
 Renderer::~Renderer()
 {
   if (this->_proxy) {
-    this->_proxy->glDeleteProgram(this->_program);
+//    this->_proxy->glDeleteProgram(this->_program);
   }
 }
 
@@ -28,7 +28,7 @@ bool Renderer::hasFunctions()
   return this->_proxy != nullptr;
 }
 
-void Renderer::setFunctions(std::shared_ptr<OpenGLFunctionProxy> &f)
+void Renderer::setFunctions(std::shared_ptr<OpenGLFunctionProxy> f)
 {
   this->_proxy = f;
 }
@@ -44,13 +44,13 @@ void Renderer::initialize()
   GLuint fShader = this->_shader->getFragmentShader();
   this->_proxy->glAttachShader(this->_program, vShader);
   this->_proxy->glAttachShader(this->_program, fShader);
-  this->_proxy->glLinkProgram(this->_program);
   this->_proxy->glEnable(GL_BLEND);
   this->_proxy->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   this->_proxy->glEnable(GL_DEPTH_TEST);
   this->_proxy->glEnable(GL_LIGHTING);
 //  this->_proxy->glEnable(GL_CULL_FACE);
 //  this->_proxy->glCullFace(GL_FRONT);
+  this->_proxy->glLinkProgram(this->_program);
   int status;
   this->_proxy->glGetProgramiv(this->_program, GL_LINK_STATUS, &status);
   if(!status) {
@@ -58,6 +58,8 @@ void Renderer::initialize()
     this->_proxy->glGetProgramInfoLog(this->_program, 512, nullptr, log);
     std::cerr << "Error while linking shader program(s):" << log << std::endl;
   }
+  this->_proxy->glDetachShader(this->_program, vShader);
+  this->_proxy->glDetachShader(this->_program, fShader);
   this->_proxy->glDeleteShader(vShader);
   this->_proxy->glDeleteShader(fShader);
 }

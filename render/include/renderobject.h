@@ -6,7 +6,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "vertex.h"
-#include "entity.h"
+#include "entity.hpp"
 
 typedef std::unique_ptr<Vertex> VertexPtr;
 typedef std::unique_ptr<Texture> TexturePtr;
@@ -22,7 +22,7 @@ public:
   TexturePtr &getTexture();
   virtual void render(GLuint programId,
                       std::shared_ptr<OpenGLFunctionProxy> &proxy,
-                      std::unique_ptr<Entity> &entity,
+                      Entity &entity,
                       const glm::mat4 &viewProjectionMatrix);
   virtual void setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy);
 

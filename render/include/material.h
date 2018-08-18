@@ -15,9 +15,6 @@ public:
   void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   bool isInitialized();
   int getUniformShininess() const;
-  int getUniformAmbient() const;
-  int getUniformDiffuse() const;
-  int getUniformSpecular() const;
   glm::vec3 &getAmbientColor();
   glm::vec3 &getDiffuseColor();
   glm::vec3 &getSpecularColor();
@@ -25,7 +22,7 @@ public:
   float getShinePower();
 private:
   bool _initialized;
-  int u_shinePower, u_ambient, u_diffuse, u_specular;
+  int u_shinePower;
   float _shinePower;
   glm::vec3 _ambientColor, _diffuseColor, _specularColor;
   std::unique_ptr<Texture> _texture;

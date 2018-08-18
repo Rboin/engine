@@ -11,13 +11,11 @@ class QtOpenGLProxy : public OpenGLFunctionProxy
 public:
   QtOpenGLProxy(T *functions)
   {
-    this->_functions = std::unique_ptr<T>(functions);
+    this->_functions = functions;
   }
 
-  ~QtOpenGLProxy() override {}
-
 private:
-  std::unique_ptr<T> _functions;
+  T *_functions;
 
   // OpenGLFunctionProxy interface
 public:
@@ -75,6 +73,11 @@ public:
   void glDeleteShader(GLuint shader) override
   {
     this->_functions->glDeleteShader(shader);
+  }
+
+  void glDetachShader(GLuint program, GLuint shader) override
+  {
+    this->_functions->glDetachShader(program, shader);
   }
 
   void glGetShaderiv(GLuint shader, GLenum pname, GLint *params) override

@@ -41,19 +41,19 @@ void LightRenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunct
   RenderObject::initialize(programId, proxy);
 }
 
-void LightRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, std::unique_ptr<Entity> &entity, const glm::mat4 &viewProjectionMatrix)
+void LightRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, Entity &entity, const glm::mat4 &viewProjectionMatrix)
 {
   GLuint vao = this->_mesh->getVao();
   this->bind(vao, proxy);
   this->setTextures(proxy);
 
-  this->updateMatrices(entity->getModelMatrix(), viewProjectionMatrix);
+  this->updateMatrices(entity.getModelMatrix(), viewProjectionMatrix);
 
   float w = 0.0f;
   if (this->_isPointLight) {
     w = 1.0f;
   }
-  this->_currentPosition = glm::vec4(entity->getPosition(), w);
+  this->_currentPosition = glm::vec4(entity.getPosition(), w);
   this->setUniforms(programId, proxy);
   unsigned int verticesSize = this->_mesh->getVertex()->getVerticesSize();
   proxy->glDrawArrays(GL_TRIANGLES, 0, verticesSize);

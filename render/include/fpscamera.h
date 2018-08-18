@@ -12,7 +12,7 @@ public:
    * @param p
    * @param v
    */
-  FPSCamera(const projection_information &p, const view_information &v);
+  FPSCamera(const projection_information &p, glm::vec3 position);
 
   /**
    * Updates the position and rotation vertices, limits the

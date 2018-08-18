@@ -30,17 +30,17 @@ struct view_information {
 class Camera
 {
 public:
-  Camera(const projection_information &p, const view_information &v)
+  Camera(const projection_information &p, glm::vec3 position)
   {
     this->_movement = 0;
     this->_fov = p.fov;
     this->_near = p.near;
     this->_far = p.far;
-    this->_position = v.position;
+    this->_position = position;
     this->_position_buffer = glm::vec3(0.0f);
     this->_rotation = glm::vec3(0.0f);
     this->_rotation_buffer = glm::vec3(0.0f);
-    this->_axis = std::make_shared<Axis>(v.up, v.look, v.right);
+    this->_axis = std::make_shared<Axis>();
   }
 
   /**
@@ -101,6 +101,11 @@ public:
   glm::vec3 getPosition()
   {
     return this->_position;
+  }
+
+  void setRotation(glm::vec3 r)
+  {
+    this->_rotation = r;
   }
 
   glm::mat4 &getViewMatrix()

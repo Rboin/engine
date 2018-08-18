@@ -8,12 +8,19 @@
  * The orientation can be updated using the rotation
  * matrices of entities or cameras using the
  * Axis::update(const glm::mat4 &) method.
+ *
+ * The Axis's default values are:
+ * (Y) up = {0, 1, 0}
+ * (-Z) forward = {0, 0, -1}
+ * (X) right = {1, 0, 0}
  * @brief The Axis class
  */
 class Axis
 {
 public:
-  Axis(glm::vec3 up, glm::vec3 direction, glm::vec3 right);
+  Axis(glm::vec3 up = {0.0f, 1.0f, 0.0f},
+       glm::vec3 direction = {0.0f, 0.0f, -1.0f},
+       glm::vec3 right = {1.0f, 0.0f, 0.0f});
 
   void update(const glm::mat4 &rotation);
 

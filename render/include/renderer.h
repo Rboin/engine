@@ -15,10 +15,10 @@ typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator Renderabl
 class Renderer
 {
 public:
-  Renderer(std::shared_ptr<Camera> &c);
+  Renderer(std::shared_ptr<Camera> c);
   ~Renderer();
   bool hasFunctions();
-  void setFunctions(std::shared_ptr<OpenGLFunctionProxy> &f);
+  void setFunctions(std::shared_ptr<OpenGLFunctionProxy> f);
   void initialize();
   void initializeRenderObjects(std::unique_ptr<World<RenderableEntity>> &world);
   void addShader(Shader *_shader);
