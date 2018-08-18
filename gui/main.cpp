@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <lightrenderobject.h>
+#include <transformcomponent.h>
 
 #include "movingentity.h"
 #include "playableentity.h"
@@ -45,6 +46,7 @@ Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, 
 {
   std::shared_ptr<Axis> axis = std::make_shared<Axis>(up, forward, right);
   Entity *e = new MovingEntity(axis);
+  e->addComponent(new TransformComponent(position, rotation, scaling));
   e->setPosition(position);
   e->setRotation(rotation);
   e->setScaling(scaling);

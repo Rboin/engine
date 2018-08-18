@@ -17,7 +17,7 @@ class OpenGLWindow : public QWindow
 public:
   explicit OpenGLWindow(QWindow *parent = nullptr);
   OpenGLWindow(QWindow *parent, QSurfaceFormat f);
-  ~OpenGLWindow() override;
+  ~OpenGLWindow();
 
   void initialize();
 
@@ -33,10 +33,10 @@ private:
 
   std::unique_ptr<QTimer> _updateTimer, _renderTimer;
   std::unique_ptr<QElapsedTimer> _elapsedTimer;
+  std::shared_ptr<OpenGLFunctionProxy> functions;
+  std::unique_ptr<QOpenGLContext> openglContext;
   std::unique_ptr<Renderer> renderer;
   std::unique_ptr<World<RenderableEntity>> world;
-  std::unique_ptr<QOpenGLContext> openglContext;
-  std::shared_ptr<OpenGLFunctionProxy> functions;
 
   void initializeFunctionProxy();
   void initializeShader();
