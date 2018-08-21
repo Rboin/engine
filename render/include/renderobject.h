@@ -22,7 +22,7 @@ public:
   TexturePtr &getTexture();
   virtual void render(GLuint programId,
                       std::shared_ptr<OpenGLFunctionProxy> &proxy,
-                      Entity &entity,
+                      const glm::mat4 &modelMatrix,
                       const glm::mat4 &viewProjectionMatrix);
   virtual void setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy);
 

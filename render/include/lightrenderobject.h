@@ -11,7 +11,7 @@ public:
   // RenderObject interface
 public:
   void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy) override;
-  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, Entity &entity, const glm::mat4 &viewProjectionMatrix) override;
+  void render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &modelMatrix, const glm::mat4 &viewProjectionMatrix) override;
   void setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy) override;
   void setIsPointLight(bool p);
 private:

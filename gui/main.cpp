@@ -3,6 +3,9 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileInfo>
+#include <rendercomponent.h>
+
+#include "transformcomponenthandler.h"
 
 #include "lightrenderobject.h"
 #include "transformcomponent.h"
@@ -46,11 +49,8 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
 {
-  auto *e = new MovingEntity();
-//  e->addComponent(new TransformComponent(position, rotation, scaling));
-  e->setPosition(position);
-  e->setRotation(rotation);
-  e->setScaling(scaling);
+  Entity *e = new MovingEntity();
+  e->addComponent(new TransformComponent(e->getId(), position, rotation, scaling));
   return e;
 }
 
@@ -225,9 +225,6 @@ int main(int argc, char **argv)
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
 
-  World<RenderableEntity> *world = createWorld();
-  window.setWorld(world);
-
   std::shared_ptr<Camera> camera = std::shared_ptr<FPSCamera>(
                                      new FPSCamera({45.0f, 0.1f, 100.0f},
                                                    glm::vec3(0.0f, 0.0f, -1.0f)
@@ -236,31 +233,48 @@ int main(int argc, char **argv)
 
 
   // BOX
-  auto *box = new RenderableEntity(createRenderObject<RenderObject>(32.0f,
-                                                                    ":/resources/images/steelborder_woodbox.png",
-                                                                    ":/resources/images/container2_specular.png",
-                                                                    ":/resources/images/matrix.jpg",
-                                                                    glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                    glm::vec3(1.0f, 0.5f, 0.31f),
-                                                                    glm::vec3(0.5f, 0.5f, 0.5f)));
-  box->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-  box->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
-  box->setScaling(glm::vec3(1.0f, 1.0f, 1.0f));
+  RenderObject *ro = createRenderObject<RenderObject>(32.0f,
+                                                      ":/resources/images/steelborder_woodbox.png",
+                                                      ":/resources/images/container2_specular.png",
+                                                      ":/resources/images/matrix.jpg",
+                                                      glm::vec3(1.0f, 0.5f, 0.31f),
+                                                      glm::vec3(1.0f, 0.5f, 0.31f),
+                                                      glm::vec3(0.5f, 0.5f, 0.5f));
+  auto *box = new RenderableEntity(ro);
+  box->addComponent(
+    new TransformComponent(
+      box->getId(),
+      glm::vec3(0.0f),
+      glm::vec3(0.0f),
+      glm::vec3(1.0f)
+    )
+  );
+  box->addComponent(new RenderComponent(box->getId(), ro));
 
-  auto *light1 = new RenderableEntity(createRenderObject<LightRenderObject>(-1,
-                                                                            ":/resources/images/awesomeface.png",
-                                                                            ":/resources/images/awesomeface.png",
-                                                                            ":/resources/images/default.png",
-                                                                            glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                            glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                            glm::vec3(1.0f, 1.0f, 1.0f)));
-  light1->setPosition(glm::vec3(0.0f, 0.5f, -1.0f));
-  light1->setRotation(glm::vec3(0.0f));
-  light1->setScaling(glm::vec3(0.1f));
+
+  // LIGHT OBJECT
+  RenderObject *lightRenderObject = createRenderObject<LightRenderObject>(-1,
+                                                                          ":/resources/images/awesomeface.png",
+                                                                          ":/resources/images/awesomeface.png",
+                                                                          ":/resources/images/default.png",
+                                                                          glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                          glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                          glm::vec3(1.0f, 1.0f, 1.0f));
+  auto *light1 = new RenderableEntity(lightRenderObject);
+  light1->addComponent(
+    new TransformComponent(
+      light1->getId(),
+      glm::vec3(0.0f, 0.5f, -1.0f),
+      glm::vec3(0.0f),
+      glm::vec3(0.1f)
+    ));
+  light1->addComponent(new RenderComponent(light1->getId(), lightRenderObject));
 
   std::unique_ptr<LightRenderObject> &lro1 = (std::unique_ptr<LightRenderObject> &) light1->getRenderObject();
   lro1->setIsPointLight(true);
 
+
+  // PLAYER
   auto *player = new PlayableEntity(camera, createRenderObject<RenderObject>(0,
                                                                              ":/resources/images/default.png",
                                                                              ":/resources/images/default.png",
@@ -268,23 +282,31 @@ int main(int argc, char **argv)
                                                                              glm::vec3(0.0f, 0.0f, 0.0f),
                                                                              glm::vec3(0.0f, 0.0f, 0.0f),
                                                                              glm::vec3(0.0f, 0.0f, 0.0f)));
-  player->setPosition(camera->getPosition());
-  player->setRotation(camera->getRotationVector());
-  player->setScaling(glm::vec3(0.0f, 0.0f, 0.0f));
+  player->addComponent(
+    new TransformComponent(
+      player->getId(),
+      camera->getPosition(),
+      camera->getRotationVector(),
+      glm::vec3(0.0f)
+    ));
+
+
+
+  World<RenderableEntity> *world = createWorld();
   world->addEntity(box);
   world->addEntity(player);
   world->addEntity(light1);
 
-  window.setRenderer(new Renderer(camera));
+  TransformComponentHandler *transformHandler = new TransformComponentHandler;
 
+  world->addComponentHandler(transformHandler);
+
+  window.setWorld(world);
+  window.setRenderer(new Renderer(camera));
   window.setHeight(720);
   window.setWidth(1280);
   window.initialize();
   window.show();
-
-  ComponentList tmp;
-  tmp.addComponent(new TransformComponent(box->getId(), box->getPosition(), box->getRotation(), box->getScaling()));
-  std::shared_ptr<TransformComponent> found = tmp.getComponent<TransformComponent>();
 
   return app.exec();
 }

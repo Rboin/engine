@@ -8,9 +8,11 @@
 #include "renderableentity.h"
 #include "world.hpp"
 #include "camera.hpp"
+#include "rendercomponent.h"
 
-typedef const std::vector<std::unique_ptr<RenderableEntity>> RenderableVector;
-typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator RenderableVectorIterator;
+typedef std::unique_ptr<RenderableEntity> UniqueEntityPtr;
+typedef const std::vector<std::unique_ptr<RenderableEntity>> EntityVector;
+typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator EntityVectorIterator;
 
 class Renderer
 {
@@ -20,7 +22,7 @@ public:
   bool hasFunctions();
   void setFunctions(std::shared_ptr<OpenGLFunctionProxy> f);
   void initialize();
-  void initializeRenderObjects(std::unique_ptr<World<RenderableEntity>> &world);
+  void initializeRenderObjects(std::unique_ptr<World<RenderableEntity> > &world);
   void addShader(Shader *_shader);
 
   void render(std::unique_ptr<World<RenderableEntity> > &world);

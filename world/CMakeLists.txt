@@ -11,11 +11,13 @@ set(SOURCE_FILES
     include/component.hpp
     include/typedcomponent.hpp
     include/componentlist.hpp
+    include/componenthandler.hpp
     include/entity.hpp
     include/typedentity.hpp
     include/movingentity.h src/movingentity.cpp
     include/axis.h src/axis.cpp
     include/transformcomponent.h src/transformcomponent.cpp
+    include/transformcomponenthandler.h src/transformcomponenthandler.cpp
 )
 
 add_library(world SHARED ${SOURCE_FILES})

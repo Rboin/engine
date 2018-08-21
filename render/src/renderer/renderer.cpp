@@ -66,15 +66,23 @@ void Renderer::initialize()
 
 void Renderer::initializeRenderObjects(std::unique_ptr<World<RenderableEntity> > &world)
 {
+
+  // TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
+
   // Get all entities
-  RenderableVector &renderables = world->getEntities();
-  RenderableVectorIterator it;
+  const EntityVector &renderables = world->getEntities();
+  EntityVectorIterator it;
   // Initialize renderobjects in a loop.
   for(it = renderables.begin(); it != renderables.end(); it++) {
-    std::unique_ptr<RenderObject> &currentRenderObject = (*it)->getRenderObject();
-    if (!currentRenderObject->isInitialized()) {
-      currentRenderObject->initialize(this->_program, this->_proxy);
+    const UniqueEntityPtr &currentEntity = (*it);
+    std::shared_ptr<RenderComponent> renderComponent = currentEntity->getComponents()->getComponent<RenderComponent>();
+    if (renderComponent != nullptr) {
+      std::shared_ptr<RenderObject> currentRenderObject = renderComponent->getRenderObject();
+      if (!currentRenderObject->isInitialized()) {
+        currentRenderObject->initialize(this->_program, this->_proxy);
+      }
     }
+
   }
 
 }
@@ -101,14 +109,22 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
       this->u_cameraPosition = this->_proxy->glGetUniformLocation(this->_program, "cameraPosition");
     }
 
+// TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
     glm::vec3 cameraPosition = this->_camera->getPosition();
     this->_proxy->glUniform3fv(this->u_cameraPosition, 1, glm::value_ptr(cameraPosition));
     glm::mat4 viewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
-    const std::vector<std::unique_ptr<RenderableEntity>> &v = world->getEntities();
-    std::vector<std::unique_ptr<RenderableEntity>>::const_iterator iter;
+    const EntityVector &v = world->getEntities();
+    EntityVectorIterator iter;
     for(iter = v.begin(); iter != v.end(); ++iter) {
-      const std::unique_ptr<RenderableEntity> &entity = (*iter);
-      entity->render(this->_program, this->_proxy, viewProjection);
+      const UniqueEntityPtr &entity = (*iter);
+      std::shared_ptr<RenderComponent> renderComponent = entity->getComponents()->getComponent<RenderComponent>();
+      if (renderComponent != nullptr) {
+        std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
+        renderComponent->render(this->_program, this->_proxy, *entity, viewProjection);
+        // TODO: Let renderObjects accept std::unique_ptr's and the entity's components (remove transformcomponent from rendercomponent)
+//        renderObject->render(this->_program, this->_proxy, *entity, viewProjection);
+      }
+//      entity->render(this->_program, this->_proxy, viewProjection);
     }
     this->_proxy->glUseProgram(0);
   }

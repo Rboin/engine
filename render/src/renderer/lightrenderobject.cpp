@@ -2,6 +2,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <transformcomponent.h>
+
 LightRenderObject::LightRenderObject(Mesh *m) : RenderObject(m),
   _isPointLight(true),
   u_position(-1),
@@ -41,19 +43,21 @@ void LightRenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunct
   RenderObject::initialize(programId, proxy);
 }
 
-void LightRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, Entity &entity, const glm::mat4 &viewProjectionMatrix)
+void LightRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &modelMatrix, const glm::mat4 &viewProjectionMatrix)
 {
   GLuint vao = this->_mesh->getVao();
   this->bind(vao, proxy);
   this->setTextures(proxy);
 
-  this->updateMatrices(entity.getModelMatrix(), viewProjectionMatrix);
+  this->updateMatrices(modelMatrix, viewProjectionMatrix);
 
   float w = 0.0f;
   if (this->_isPointLight) {
     w = 1.0f;
   }
-  this->_currentPosition = glm::vec4(entity.getPosition(), w);
+  // Get the position (4th column)
+  glm::vec3 position(modelMatrix[3]);
+  this->_currentPosition = glm::vec4(position, w);
   this->setUniforms(programId, proxy);
   unsigned int verticesSize = this->_mesh->getVertex()->getVerticesSize();
   proxy->glDrawArrays(GL_TRIANGLES, 0, verticesSize);

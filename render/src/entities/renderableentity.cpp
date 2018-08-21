@@ -12,5 +12,5 @@ std::unique_ptr<RenderObject> &RenderableEntity::getRenderObject()
 
 void RenderableEntity::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &viewProjectionMatrix)
 {
-  this->renderObject->render(programId, proxy, *this, viewProjectionMatrix);
+//  this->renderObject->render(programId, proxy, *this, viewProjectionMatrix);
 }

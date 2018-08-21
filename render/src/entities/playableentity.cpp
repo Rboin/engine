@@ -19,12 +19,17 @@ void PlayableEntity::update(const float &delta)
 
 void PlayableEntity::setPosition(glm::vec3 p)
 {
-  Entity::setPosition(p);
+  this->getComponents()->getComponent<TransformComponent>()->setPosition(p);
   this->_camera->setPosition(p);
 }
 
 void PlayableEntity::setRotation(glm::vec3 r)
 {
-  Entity::setRotation(r);
+  this->getComponents()->getComponent<TransformComponent>()->setRotation(r);
   this->_camera->setRotation(-r);
+}
+
+void PlayableEntity::setScaling(glm::vec3 s)
+{
+  this->getComponents()->getComponent<TransformComponent>()->setScaling(s);
 }

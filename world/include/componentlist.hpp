@@ -47,6 +47,13 @@ public:
     }
     return component;
   }
+
+  void update(const float &delta)
+  {
+    for (std::pair<ComponentId, std::shared_ptr<Component>> element : this->_components) {
+      element.second->update(delta);
+    }
+  }
 private:
   std::unordered_map<ComponentId, std::shared_ptr<Component>> _components;
 };

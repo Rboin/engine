@@ -2,7 +2,6 @@
 #define ENTITY_HPP
 
 #include <memory>
-#include <vector>
 #include <algorithm>
 
 #include <glm/glm.hpp>
@@ -10,6 +9,8 @@
 
 #include "typeid.hpp"
 #include "axis.h"
+#include "componentlist.hpp"
+#include "transformcomponent.h"
 
 /**
  * @brief The BaseEntity base class.
@@ -18,59 +19,38 @@
 class Entity
 {
 public:
-  Entity(std::shared_ptr<Axis> a = std::make_shared<Axis>())
+  Entity(std::shared_ptr<Axis> a = std::make_shared<Axis>(),
+         std::shared_ptr<ComponentList> c = std::make_shared<ComponentList>())
   {
     this->_axis = a;
-    this->_position = glm::vec3(0.0f, 0.0f, 0.0f);
-    this->_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    this->_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
+    this->_components = c;
   }
 
   virtual ~Entity() {}
 
-  virtual const glm::mat4 &getModelMatrix()
-  {
-    return this->_model;
-  }
-
-  virtual const glm::vec3 &getPosition()
-  {
-    return this->_position;
-  }
-
-  virtual const glm::vec3 &getRotation()
-  {
-    return this->_rotation;
-  }
-
-  virtual const glm::vec3 &getScaling()
-  {
-    return this->_scaling;
-  }
-
-  virtual std::shared_ptr<Axis> &getAxis()
+  virtual std::shared_ptr<Axis> getAxis()
   {
     return this->_axis;
   }
 
-  virtual void setPosition(glm::vec3 p)
+  virtual std::shared_ptr<ComponentList> getComponents()
   {
-    this->_position = p;
+    return this->_components;
   }
 
-  virtual void setRotation(glm::vec3 r)
+  virtual void addComponent(Component *c)
   {
-    this->_rotation = r;
+    this->_components->addComponent(c);
   }
 
-  virtual void setScaling(glm::vec3 s)
-  {
-    this->_scaling = s;
-  }
-
-  virtual void setAxis(std::shared_ptr<Axis> &a)
+  virtual void setAxis(std::shared_ptr<Axis> a)
   {
     this->_axis = a;
+  }
+
+  virtual const int getId() const
+  {
+    return this->_id;
   }
 
   virtual void update(const float &delta)
@@ -78,24 +58,18 @@ public:
     //  this->_rotation.x += (delta * 10);
     //  this->_rotation.y += (delta * 10);
     // Update logic (calculate velocities etc).
-    this->updateModelMatrix();
-    this->_axis->update(this->_rotate);
+    this->_components->update(delta);
+    const glm::vec3 &rotation = this->_components->getComponent<TransformComponent>()->getRotation();
+    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    this->_axis->update(rotationMatrix);
   }
 
 protected:
-  glm::vec3 _position, _rotation, _scaling;
-  glm::mat4 _model, _translate, _rotate, _scale;
+  int _id;
   std::shared_ptr<Axis> _axis;
-
-  virtual void updateModelMatrix()
-  {
-    this->_translate = glm::translate(glm::mat4(1.0f), this->_position);
-    this->_rotate = glm::rotate(glm::mat4(1.0f), glm::radians(this->_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    this->_rotate = glm::rotate(this->_rotate, glm::radians(this->_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    this->_rotate = glm::rotate(this->_rotate, glm::radians(this->_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    this->_scale = glm::scale(glm::mat4(1.0f), this->_scaling);
-    this->_model = this->_translate * this->_rotate * this->_scale;
-  }
+  std::shared_ptr<ComponentList> _components;
 };
 
 #endif // ENTITY_HPP

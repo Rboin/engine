@@ -13,14 +13,13 @@ public:
 
   std::shared_ptr<Camera> &getCamera();
 
+  void setPosition(glm::vec3 p);
+  void setRotation(glm::vec3 r);
+  void setScaling(glm::vec3 s);
+
   void update(const float &delta) override;
 private:
   std::shared_ptr<Camera> _camera;
-
-  // Entity interface
-public:
-  void setPosition(glm::vec3 p) override;
-  void setRotation(glm::vec3 r) override;
 };
 
 #endif // PLAYABLEENTITY_H

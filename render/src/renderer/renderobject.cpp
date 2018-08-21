@@ -49,7 +49,7 @@ TexturePtr &RenderObject::getTexture()
   return this->_mesh->getTexture();
 }
 
-void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, Entity &entity, const glm::mat4 &viewProjectionMatrix)
+void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &modelMatrix, const glm::mat4 &viewProjectionMatrix)
 {
   // Bind VAO and draw elements using indices.
   GLuint vao = this->_mesh->getVao();
@@ -57,7 +57,7 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
   // Bind texture(s).
   this->setTextures(proxy);
 
-  this->updateMatrices(entity.getModelMatrix(), viewProjectionMatrix);
+  this->updateMatrices(modelMatrix, viewProjectionMatrix);
   this->setUniforms(programId, proxy);
   unsigned int verticesSize = this->_mesh->getVertex()->getVerticesSize();
   proxy->glDrawArrays(GL_TRIANGLES, 0, verticesSize);

@@ -16,14 +16,6 @@ public:
 
   virtual ~TypedEntity()
   {}
-
-  virtual const unsigned int getId()
-  {
-    return this->_id;
-  }
-
-protected:
-  unsigned int _id;
 };
 
 #endif // TYPEENTITY_HPP
