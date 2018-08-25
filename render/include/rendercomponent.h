@@ -2,10 +2,10 @@
 #define RENDERCOMPONENT_H
 
 #include <memory>
+
 #include <typedcomponent.hpp>
 #include <transformcomponent.h>
 
-#include "renderableentity.h"
 #include "renderobject.h"
 
 class RenderComponent : public TypedComponent<RenderComponent>

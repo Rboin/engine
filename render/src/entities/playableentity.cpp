@@ -1,7 +1,7 @@
 #include "playableentity.h"
 
-PlayableEntity::PlayableEntity(std::shared_ptr<Camera> c, RenderObject *r) :
-  RenderableEntity(r)
+PlayableEntity::PlayableEntity(std::shared_ptr<Camera> c) :
+  Entity()
 {
   this->_camera = c;
 }
@@ -13,8 +13,8 @@ std::shared_ptr<Camera> &PlayableEntity::getCamera()
 
 void PlayableEntity::update(const float &delta)
 {
-  RenderableEntity::update(delta);
   this->_camera->update(delta);
+  Entity::update(delta);
 }
 
 void PlayableEntity::setPosition(glm::vec3 p)

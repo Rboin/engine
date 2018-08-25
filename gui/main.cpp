@@ -11,7 +11,6 @@
 #include "transformcomponent.h"
 #include "componentlist.hpp"
 
-#include "movingentity.h"
 #include "playableentity.h"
 #include "openglwindow.h"
 #include "fpscamera.h"
@@ -49,7 +48,7 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
 {
-  Entity *e = new MovingEntity();
+  Entity *e = new Entity;//new MovingEntity();
   e->addComponent(new TransformComponent(e->getId(), position, rotation, scaling));
   return e;
 }
@@ -61,42 +60,48 @@ T *createRenderObject(float shinePower,
 {
   std::vector<glm::vec3> vertices = {
     // Positions
+    // BACK
     glm::vec3(-0.5f, -0.5f, -0.5f),
-    glm::vec3(0.5f, -0.5f, -0.5f),
+    glm::vec3(0.5f, 0.5f, -0.5f),
+    glm::vec3(0.5f,  -0.5f, -0.5f),
     glm::vec3(0.5f,  0.5f, -0.5f),
-    glm::vec3(0.5f,  0.5f, -0.5f),
-    glm::vec3(-0.5f,  0.5f, -0.5f),
     glm::vec3(-0.5f,  -0.5f, -0.5f),
+    glm::vec3(-0.5f,  0.5f, -0.5f),
+    // FRONT
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
+    // LEFT
     glm::vec3(-0.5f,  0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f,  0.5f,  0.5f),
+    // RIGHT
     glm::vec3(0.5f,  0.5f,  0.5f),
-    glm::vec3(0.5f,  0.5f, -0.5f),
+    glm::vec3(0.5f,  -0.5f, -0.5f),
+    glm::vec3(0.5f, 0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f, -0.5f),
-    glm::vec3(0.5f, -0.5f, -0.5f),
-    glm::vec3(0.5f, -0.5f,  0.5f),
-    glm::vec3(0.5f,  0.5f,  0.5f),
+    glm::vec3(0.5f, 0.5f,  0.5f),
+    glm::vec3(0.5f,  -0.5f,  0.5f),
+    // BOTTOM
     glm::vec3(-0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f, -0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f,  0.5f),
     glm::vec3(-0.5f, -0.5f, -0.5f),
+    // TOP
     glm::vec3(-0.5f,  0.5f, -0.5f),
-    glm::vec3(0.5f,  0.5f, -0.5f),
+    glm::vec3(0.5f,  0.5f, 0.5f),
+    glm::vec3(0.5f,  0.5f,  -0.5f),
     glm::vec3(0.5f,  0.5f,  0.5f),
-    glm::vec3(0.5f,  0.5f,  0.5f),
-    glm::vec3(-0.5f,  0.5f,  0.5f),
-    glm::vec3(-0.5f,  0.5f, -0.5f),
+    glm::vec3(-0.5f,  0.5f,  -0.5f),
+    glm::vec3(-0.5f,  0.5f, 0.5f),
 
     // Colors
     glm::vec3(1.0f, 0.0f, 0.0f),
@@ -106,41 +111,46 @@ T *createRenderObject(float shinePower,
 
     // Texture coordinates
     glm::vec3(0.0f, 0.0f, 0.0f),
+    glm::vec3(1.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(1.0f, 1.0f, 0.0f),
+    glm::vec3(0.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+
+    glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 1.0f, 0.0f),
-    glm::vec3(1.0f, 1.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 1.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 0.0f, 0.0f),
+
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
+
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 1.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 0.0f, 0.0f),
+
     glm::vec3(0.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
+
     glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
     glm::vec3(1.0f, 1.0f, 0.0f),
     glm::vec3(1.0f, 0.0f, 0.0f),
-    glm::vec3(1.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(0.0f, 0.0f, 0.0f),
 
     // Normals
     glm::vec3(0.0f,  0.0f, -1.0f),
@@ -208,9 +218,9 @@ T *createRenderObject(float shinePower,
   return r;
 }
 
-World<RenderableEntity> *createWorld()
+World<Entity> *createWorld()
 {
-  return new World<RenderableEntity>();
+  return new World<Entity>;
 }
 
 int main(int argc, char **argv)
@@ -240,7 +250,7 @@ int main(int argc, char **argv)
                                                       glm::vec3(1.0f, 0.5f, 0.31f),
                                                       glm::vec3(1.0f, 0.5f, 0.31f),
                                                       glm::vec3(0.5f, 0.5f, 0.5f));
-  auto *box = new RenderableEntity(ro);
+  auto *box = new Entity;
   box->addComponent(
     new TransformComponent(
       box->getId(),
@@ -253,14 +263,15 @@ int main(int argc, char **argv)
 
 
   // LIGHT OBJECT
-  RenderObject *lightRenderObject = createRenderObject<LightRenderObject>(-1,
-                                                                          ":/resources/images/awesomeface.png",
-                                                                          ":/resources/images/awesomeface.png",
-                                                                          ":/resources/images/default.png",
-                                                                          glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                          glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                          glm::vec3(1.0f, 1.0f, 1.0f));
-  auto *light1 = new RenderableEntity(lightRenderObject);
+  LightRenderObject *lightRenderObject = createRenderObject<LightRenderObject>(-1,
+                                                                               ":/resources/images/awesomeface.png",
+                                                                               ":/resources/images/awesomeface.png",
+                                                                               ":/resources/images/default.png",
+                                                                               glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                               glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                               glm::vec3(1.0f, 1.0f, 1.0f));
+  lightRenderObject->setIsPointLight(true);
+  auto *light1 = new Entity;
   light1->addComponent(
     new TransformComponent(
       light1->getId(),
@@ -270,18 +281,16 @@ int main(int argc, char **argv)
     ));
   light1->addComponent(new RenderComponent(light1->getId(), lightRenderObject));
 
-  std::unique_ptr<LightRenderObject> &lro1 = (std::unique_ptr<LightRenderObject> &) light1->getRenderObject();
-  lro1->setIsPointLight(true);
-
 
   // PLAYER
-  auto *player = new PlayableEntity(camera, createRenderObject<RenderObject>(0,
-                                                                             ":/resources/images/default.png",
-                                                                             ":/resources/images/default.png",
-                                                                             ":/resources/images/default.png",
-                                                                             glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                             glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                             glm::vec3(0.0f, 0.0f, 0.0f)));
+  RenderObject *playerRenderObject = createRenderObject<RenderObject>(0,
+                                                                      ":/resources/images/default.png",
+                                                                      ":/resources/images/default.png",
+                                                                      ":/resources/images/default.png",
+                                                                      glm::vec3(1.0f, 0.0f, 0.0f),
+                                                                      glm::vec3(0.0f, 1.0f, 0.0f),
+                                                                      glm::vec3(0.0f, 0.0f, 1.0f));
+  auto *player = new PlayableEntity(camera);
   player->addComponent(
     new TransformComponent(
       player->getId(),
@@ -289,10 +298,11 @@ int main(int argc, char **argv)
       camera->getRotationVector(),
       glm::vec3(0.0f)
     ));
+  player->addComponent(new RenderComponent(player->getId(), playerRenderObject));
 
 
 
-  World<RenderableEntity> *world = createWorld();
+  World<Entity> *world = createWorld();
   world->addEntity(box);
   world->addEntity(player);
   world->addEntity(light1);

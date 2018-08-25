@@ -2,17 +2,17 @@
 #define RENDERER_H
 
 #include <memory>
+
 #include "shader.h"
 #include "openglfunctionproxy.h"
 #include "glm/glm.hpp"
-#include "renderableentity.h"
 #include "world.hpp"
 #include "camera.hpp"
 #include "rendercomponent.h"
 
-typedef std::unique_ptr<RenderableEntity> UniqueEntityPtr;
-typedef const std::vector<std::unique_ptr<RenderableEntity>> EntityVector;
-typedef std::vector<std::unique_ptr<RenderableEntity>>::const_iterator EntityVectorIterator;
+typedef std::unique_ptr<Entity> UniqueEntityPtr;
+typedef const std::vector<std::unique_ptr<Entity>> EntityVector;
+typedef std::vector<std::unique_ptr<Entity>>::const_iterator EntityVectorIterator;
 
 class Renderer
 {
@@ -22,11 +22,10 @@ public:
   bool hasFunctions();
   void setFunctions(std::shared_ptr<OpenGLFunctionProxy> f);
   void initialize();
-  void initializeRenderObjects(std::unique_ptr<World<RenderableEntity> > &world);
+  void initializeRenderObjects(std::unique_ptr<World<Entity> > &world);
   void addShader(Shader *_shader);
 
-  void render(std::unique_ptr<World<RenderableEntity> > &world);
-  void renderEntity(const std::unique_ptr<RenderableEntity> &entity, std::unique_ptr<Camera> &camera);
+  void render(std::unique_ptr<World<Entity> > &world);
 
   std::shared_ptr<Camera> &getCamera();
 private:

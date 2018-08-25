@@ -11,7 +11,6 @@ set(PUBLIC_HEADERS
     include/camera.hpp
     include/openglfunctionproxy.h
     include/renderer.h
-    include/renderableentity.h
     include/playableentity.h
     include/mesh.h
     include/material.h
@@ -35,7 +34,6 @@ set(SOURCE_FILES
     src/shader/shader.cpp
     src/shader/shaderinformation.cpp
     src/camera/fpscamera.cpp
-    src/entities/renderableentity.cpp
     src/entities/playableentity.cpp
     src/renderer/lightrenderobject.cpp
     src/renderer/rendercomponent.cpp

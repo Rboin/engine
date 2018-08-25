@@ -3,13 +3,13 @@
 
 #include <memory>
 
-#include "renderableentity.h"
+#include "entity.hpp"
 #include "camera.hpp"
 
-class PlayableEntity : public RenderableEntity
+class PlayableEntity : public Entity
 {
 public:
-  PlayableEntity(std::shared_ptr<Camera> c, RenderObject *r);
+  PlayableEntity(std::shared_ptr<Camera> c);
 
   std::shared_ptr<Camera> &getCamera();
 

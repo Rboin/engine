@@ -40,9 +40,9 @@ void OpenGLWindow::initialize()
   this->initializeTimer();
 }
 
-void OpenGLWindow::setWorld(World<RenderableEntity> *world)
+void OpenGLWindow::setWorld(World<Entity> *world)
 {
-  this->world = std::unique_ptr<World<RenderableEntity>>(world);
+  this->world = std::unique_ptr<World<Entity>>(world);
 }
 
 void OpenGLWindow::setRenderer(Renderer *renderer)

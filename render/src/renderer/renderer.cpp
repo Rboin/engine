@@ -48,8 +48,10 @@ void Renderer::initialize()
   this->_proxy->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   this->_proxy->glEnable(GL_DEPTH_TEST);
   this->_proxy->glEnable(GL_LIGHTING);
-//  this->_proxy->glEnable(GL_CULL_FACE);
-//  this->_proxy->glCullFace(GL_FRONT);
+  // COUNTER-CLOCKWISE FACE CULLING
+  this->_proxy->glEnable(GL_CULL_FACE);
+  this->_proxy->glCullFace(GL_BACK);
+  this->_proxy->glFrontFace(GL_CCW);
   this->_proxy->glLinkProgram(this->_program);
   int status;
   this->_proxy->glGetProgramiv(this->_program, GL_LINK_STATUS, &status);
@@ -64,7 +66,7 @@ void Renderer::initialize()
   this->_proxy->glDeleteShader(fShader);
 }
 
-void Renderer::initializeRenderObjects(std::unique_ptr<World<RenderableEntity> > &world)
+void Renderer::initializeRenderObjects(std::unique_ptr<World<Entity> > &world)
 {
 
   // TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
@@ -92,7 +94,7 @@ void Renderer::addShader(Shader *shader)
   this->_shader = std::unique_ptr<Shader>(shader);
 }
 
-void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
+void Renderer::render(std::unique_ptr<World<Entity> > &world)
 {
   if (this->_proxy) {
     if(!this->_initialized) {
@@ -121,10 +123,7 @@ void Renderer::render(std::unique_ptr<World<RenderableEntity> > &world)
       if (renderComponent != nullptr) {
         std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
         renderComponent->render(this->_program, this->_proxy, *entity, viewProjection);
-        // TODO: Let renderObjects accept std::unique_ptr's and the entity's components (remove transformcomponent from rendercomponent)
-//        renderObject->render(this->_program, this->_proxy, *entity, viewProjection);
       }
-//      entity->render(this->_program, this->_proxy, viewProjection);
     }
     this->_proxy->glUseProgram(0);
   }
