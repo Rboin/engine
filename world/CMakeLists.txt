@@ -6,17 +6,18 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(glm REQUIRED)
 
 set(SOURCE_FILES
-    include/world.hpp
+    include/world.h src/world.cpp
     include/typeid.hpp
     include/component.hpp
     include/typedcomponent.hpp
     include/componentlist.hpp
-    include/componenthandler.hpp
     include/entity.hpp
+    include/transformationsystem.h src/transformationsystem.cpp
     include/typedentity.hpp
+    include/system.h
+    include/typedsystem.hpp
     include/axis.h src/axis.cpp
     include/transformcomponent.h src/transformcomponent.cpp
-    include/transformcomponenthandler.h src/transformcomponenthandler.cpp
 )
 
 add_library(world SHARED ${SOURCE_FILES})

@@ -66,7 +66,21 @@ void Renderer::initialize()
   this->_proxy->glDeleteShader(fShader);
 }
 
-void Renderer::initializeRenderObjects(std::unique_ptr<World<Entity> > &world)
+void Renderer::initializeRenderObjects(std::vector<std::unique_ptr<Entity> > &entities)
+{
+
+  for (auto iter = entities.begin(); iter != entities.end(); ++iter) {
+    std::shared_ptr<RenderComponent> renderComponent = (*iter)->getComponents()->getComponent<RenderComponent>();
+    if (renderComponent) {
+      std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
+      if (!renderObject->isInitialized()) {
+        renderObject->initialize(this->_program, this->_proxy);
+      }
+    }
+  }
+}
+
+void Renderer::initializeRenderObjects(std::unique_ptr<World> &world)
 {
 
   // TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
@@ -94,8 +108,9 @@ void Renderer::addShader(Shader *shader)
   this->_shader = std::unique_ptr<Shader>(shader);
 }
 
-void Renderer::render(std::unique_ptr<World<Entity> > &world)
+void Renderer::render(std::unique_ptr<World> &world)
 {
+
   if (this->_proxy) {
     if(!this->_initialized) {
       this->initialize();
@@ -134,3 +149,40 @@ std::shared_ptr<Camera> &Renderer::getCamera()
 {
   return this->_camera;
 }
+
+
+void Renderer::update(const float &delta, std::vector<std::unique_ptr<Entity> > &entities)
+{
+  if (this->_proxy && !this->_initialized) {
+    this->initialize();
+    this->_initialized = true;
+  }
+
+  this->_proxy->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  this->_proxy->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  this->_proxy->glUseProgram(this->_program);
+
+  if(this->u_cameraPosition < 0) {
+    this->u_cameraPosition = this->_proxy->glGetUniformLocation(this->_program, "cameraPosition");
+  }
+  glm::vec3 cameraPosition = this->_camera->getPosition();
+  this->_proxy->glUniform3fv(this->u_cameraPosition, 1, glm::value_ptr(cameraPosition));
+  this->_currentViewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
+
+  TypedSystem::update(delta, entities);
+
+  this->_proxy->glUseProgram(0);
+}
+
+void Renderer::update(const float &delta, std::unique_ptr<Entity> &entity)
+{
+  std::shared_ptr<RenderComponent> renderComponent = entity->getComponents()->getComponent<RenderComponent>();
+  std::shared_ptr<TransformComponent> transformComponent = entity->getComponents()->getComponent<TransformComponent>();
+  std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
+
+  if (!renderObject->isInitialized()) {
+    renderObject->initialize(this->_program, this->_proxy);
+  }
+  renderObject->render(this->_program, this->_proxy, transformComponent->getModel(), this->_currentViewProjection);
+}
+

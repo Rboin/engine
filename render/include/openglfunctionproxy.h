@@ -62,6 +62,7 @@ public:
   // Misc
   virtual void glEnable(GLenum cap) = 0;
   virtual void glBlendFunc(GLenum sfactor, GLenum dfactor) = 0;
+  virtual void glDepthFunc(GLenum func) = 0;
   virtual void glCullFace(GLenum mode) = 0;
   virtual void glFrontFace(GLenum mode) = 0;
   virtual const GLubyte *glGetString(GLenum name) = 0;

@@ -3,18 +3,18 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileInfo>
-#include <rendercomponent.h>
-
-#include "transformcomponenthandler.h"
 
 #include "lightrenderobject.h"
 #include "transformcomponent.h"
 #include "componentlist.hpp"
+#include "rendercomponent.h"
 
 #include "playableentity.h"
 #include "openglwindow.h"
 #include "fpscamera.h"
 #include "qtopenglproxy.hpp"
+
+#include "transformationsystem.h"
 
 TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internalFormat, int nChannels)
 {
@@ -218,9 +218,9 @@ T *createRenderObject(float shinePower,
   return r;
 }
 
-World<Entity> *createWorld()
+World *createWorld()
 {
-  return new World<Entity>;
+  return new World;
 }
 
 int main(int argc, char **argv)
@@ -232,6 +232,7 @@ int main(int argc, char **argv)
   format.setProfile(QSurfaceFormat::CoreProfile);
   format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
   format.setSamples(4);
+  format.setDepthBufferSize(24);
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
 
@@ -260,6 +261,7 @@ int main(int argc, char **argv)
     )
   );
   box->addComponent(new RenderComponent(box->getId(), ro));
+  bool hasRenderComponent = box->getComponents()->hasComponent<RenderComponent>();
 
 
   // LIGHT OBJECT
@@ -302,20 +304,27 @@ int main(int argc, char **argv)
 
 
 
-  World<Entity> *world = createWorld();
+  World *world = createWorld();
   world->addEntity(box);
   world->addEntity(player);
   world->addEntity(light1);
 
-  TransformComponentHandler *transformHandler = new TransformComponentHandler;
-
-  world->addComponentHandler(transformHandler);
+  Renderer *renderer = new Renderer(camera);
 
   window.setWorld(world);
-  window.setRenderer(new Renderer(camera));
+//  window.setRenderer(new Renderer(camera));
   window.setHeight(720);
   window.setWidth(1280);
-  window.initialize();
+
+  renderer->addShader(window.createShader());
+  renderer->setFunctions(window.createFunctionProxy());
+
+  // Add systems to the world.
+  world->addSystem(new TransformationSystem);
+  world->addSystem(renderer);
+
+  window.setCamera(camera);
+  window.initializeTimer();
   window.show();
 
   return app.exec();

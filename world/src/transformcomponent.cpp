@@ -46,14 +46,7 @@ const glm::mat4 &TransformComponent::getModel()
   return this->_model;
 }
 
-void TransformComponent::update(const float &delta)
+void TransformComponent::setModel(glm::mat4 m)
 {
-  // Translation
-  this->_model = glm::translate(glm::mat4(1.0f), this->_position);
-  // Rotation
-  this->_model = glm::rotate(this->_model, glm::radians(this->_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-  this->_model = glm::rotate(this->_model, glm::radians(this->_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-  this->_model = glm::rotate(this->_model, glm::radians(this->_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-  // Scaling
-  this->_model = glm::scale(this->_model, this->_scale);
+  this->_model = m;
 }

@@ -28,7 +28,6 @@ public:
     return this->_owner_id;
   }
 
-  virtual void update(const float &delta) = 0;
 protected:
   OwnerId _owner_id;
   ComponentId _id;

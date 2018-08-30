@@ -17,10 +17,7 @@ public:
   const glm::vec3 &getScaling();
   void setScaling(glm::vec3 s);
   const glm::mat4 &getModel();
-
-  // Component interface
-public:
-  void update(const float &delta) override;
+  void setModel(glm::mat4 m);
 
 private:
   glm::vec3 _position, _rotation, _scale;

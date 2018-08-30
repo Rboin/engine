@@ -35,19 +35,19 @@ OpenGLWindow::~OpenGLWindow()
 
 void OpenGLWindow::initialize()
 {
-  this->initializeFunctionProxy();
-  this->initializeShader();
+  this->createFunctionProxy();
+  this->createShader();
   this->initializeTimer();
 }
 
-void OpenGLWindow::setWorld(World<Entity> *world)
+void OpenGLWindow::setWorld(World *world)
 {
-  this->world = std::unique_ptr<World<Entity>>(world);
+  this->world = std::unique_ptr<World>(world);
 }
 
-void OpenGLWindow::setRenderer(Renderer *renderer)
+void OpenGLWindow::setCamera(std::shared_ptr<Camera> camera)
 {
-  this->renderer = std::unique_ptr<Renderer>(renderer);
+  this->camera = camera;
 }
 
 void OpenGLWindow::update()
@@ -56,98 +56,78 @@ void OpenGLWindow::update()
   double deltaSeconds = static_cast<double>(elapsed - this->_lastNanos) / 1000000000;
 
 //  qDebug() << "Updating with delta: " << deltaSeconds;
-  if (this->world) {
+  if (this->world && isExposed()) {
+    this->openglContext->makeCurrent(this);
     this->world->update(deltaSeconds);
+    this->openglContext->swapBuffers(this);
   }
   this->_lastNanos = elapsed;
 }
 
-void OpenGLWindow::render()
+std::shared_ptr<OpenGLFunctionProxy> OpenGLWindow::createFunctionProxy()
 {
-  if (isExposed() && this->renderer) {
+  // Get current OpenGL context.
+  this->openglContext = std::make_unique<QOpenGLContext>(this);
+  this->openglContext->setFormat(this->requestedFormat());
+  bool created = this->openglContext->create();
+  if(created) {
     this->openglContext->makeCurrent(this);
-    this->renderer->render(this->world);
-    this->openglContext->swapBuffers(this);
+    QOpenGLExtraFunctions *f = this->openglContext->extraFunctions();
+    if(!f) {
+      qWarning() << "Could not get the version functions...";
+    }
+    f->initializeOpenGLFunctions();
+    this->functions = std::make_shared<QtOpenGLProxy<QOpenGLExtraFunctions>>(f);
+    const char *glVersion = (const char *) this->functions->glGetString(GL_VERSION),
+                *glslVersion = (const char *) this->functions->glGetString(GL_SHADING_LANGUAGE_VERSION);
+    qDebug() << "Initialized OpenGL with version:"
+             << glVersion
+             << "GLSL:"
+             << glslVersion;
   }
+  return this->functions;
 }
 
-void OpenGLWindow::initializeFunctionProxy()
+Shader *OpenGLWindow::createShader()
 {
-
-  if (this->renderer) {
-    // Get current OpenGL context.
-    this->openglContext = std::make_unique<QOpenGLContext>(this);
-    this->openglContext->setFormat(this->requestedFormat());
-    bool created = this->openglContext->create();
-    if(created) {
-      this->openglContext->makeCurrent(this);
-      QOpenGLExtraFunctions *f = this->openglContext->extraFunctions();
-      if(!f) {
-        qWarning() << "Could not get the version functions...";
-      }
-      f->initializeOpenGLFunctions();
-      this->functions = std::make_shared<QtOpenGLProxy<QOpenGLExtraFunctions>>(f);
-      this->renderer->setFunctions(this->functions);
-      const char *glVersion = (const char *) this->functions->glGetString(GL_VERSION),
-                  *glslVersion = (const char *) this->functions->glGetString(GL_SHADING_LANGUAGE_VERSION);
-      qDebug() << "Initialized OpenGL with version:"
-               << glVersion
-               << "GLSL:"
-               << glslVersion;
-    }
-
-
+  QFile vertexfile(":/resources/shader/vertex.vert"), fragmentFile(":/resources/shader/fragment.frag");
+  bool open = vertexfile.open(QFile::ReadOnly | QFile::Text) | fragmentFile.open(QFile::ReadOnly | QFile::Text);
+  if(!open) {
+    qDebug() << "Could not open shader files...";
+    return nullptr;
   }
-}
-
-void OpenGLWindow::initializeShader()
-{
-  if (this->renderer) {
-    QFile vertexfile(":/resources/shader/vertex.vert"), fragmentFile(":/resources/shader/fragment.frag");
-    bool open = vertexfile.open(QFile::ReadOnly | QFile::Text) | fragmentFile.open(QFile::ReadOnly | QFile::Text);
-    if(!open) {
-      qDebug() << "Could not open shader files...";
-      return;
-    }
-    QTextStream vertexStream(&vertexfile), fragmentStream(&fragmentFile);
-    QString vertexSource = vertexStream.readAll(), fragmentSource = fragmentStream.readAll();
-    vertexStream.flush();
-    fragmentStream.flush();
-    vertexfile.close();
-    fragmentFile.close();
-    this->renderer->addShader(
-      new Shader(
-        new ShaderInformation(
-          vertexSource.toStdString(),
-          fragmentSource.toStdString()
-        )
-      )
-    );
-  }
+  QTextStream vertexStream(&vertexfile), fragmentStream(&fragmentFile);
+  QString vertexSource = vertexStream.readAll(), fragmentSource = fragmentStream.readAll();
+  vertexStream.flush();
+  fragmentStream.flush();
+  vertexfile.close();
+  fragmentFile.close();
+  Shader *shader = new Shader(new ShaderInformation(vertexSource.toStdString(), fragmentSource.toStdString()));
+  return shader;
 }
 
 void OpenGLWindow::initializeTimer()
 {
-  this->_renderTimer = std::make_unique<QTimer>(this);
+//  this->_renderTimer = std::make_unique<QTimer>(this);
   this->_updateTimer = std::make_unique<QTimer>(this);
   this->_elapsedTimer = std::make_unique<QElapsedTimer>();
 
   this->connect(this->_updateTimer.get(), SIGNAL(timeout()), this, SLOT(update()));
-  this->connect(this->_renderTimer.get(), SIGNAL(timeout()), this, SLOT(render()));
+//  this->connect(this->_renderTimer.get(), SIGNAL(timeout()), this, SLOT(render()));
 
   this->_updateTimer->start();
-  this->_renderTimer->start();
+//  this->_renderTimer->start();
   this->_elapsedTimer->start();
 }
 
 void OpenGLWindow::resizeEvent(QResizeEvent *e)
 {
-  if (this->renderer) {
+  if (this->camera) {
     int width = e->size().width(),
         height = e->size().height();
     this->functions->glViewport(0, 0, width, height);
-    this->renderer->getCamera()->updateViewMatrix();
-    this->renderer->getCamera()->updateProjectionMatrix(width, height);
+    this->camera->updateViewMatrix();
+    this->camera->updateProjectionMatrix(width, height);
     QSize currentSize = this->size();
     this->_center = QPoint(currentSize.width()/2, currentSize.height()/2);
   }
@@ -155,19 +135,21 @@ void OpenGLWindow::resizeEvent(QResizeEvent *e)
 
 void OpenGLWindow::keyPressEvent(QKeyEvent *e)
 {
-  switch(e->key()) {
-  case Qt::Key_W:
-    this->renderer->getCamera()->move(Direction::FORWARD);
-    break;
-  case Qt::Key_S:
-    this->renderer->getCamera()->move(Direction::BACKWARD);
-    break;
-  case Qt::Key_A:
-    this->renderer->getCamera()->move(Direction::LEFT);
-    break;
-  case Qt::Key_D:
-    this->renderer->getCamera()->move(Direction::RIGHT);
-    break;
+  if (this->camera) {
+    switch(e->key()) {
+    case Qt::Key_W:
+      this->camera->move(Direction::FORWARD);
+      break;
+    case Qt::Key_S:
+      this->camera->move(Direction::BACKWARD);
+      break;
+    case Qt::Key_A:
+      this->camera->move(Direction::LEFT);
+      break;
+    case Qt::Key_D:
+      this->camera->move(Direction::RIGHT);
+      break;
+    }
   }
 }
 
@@ -175,16 +157,16 @@ void OpenGLWindow::keyReleaseEvent(QKeyEvent *e)
 {
   switch (e->key()) {
   case Qt::Key_W:
-    this->renderer->getCamera()->undoMove(Direction::FORWARD);
+    this->camera->undoMove(Direction::FORWARD);
     break;
   case Qt::Key_S:
-    this->renderer->getCamera()->undoMove(Direction::BACKWARD);
+    this->camera->undoMove(Direction::BACKWARD);
     break;
   case Qt::Key_A:
-    this->renderer->getCamera()->undoMove(Direction::LEFT);
+    this->camera->undoMove(Direction::LEFT);
     break;
   case Qt::Key_D:
-    this->renderer->getCamera()->undoMove(Direction::RIGHT);
+    this->camera->undoMove(Direction::RIGHT);
     break;
   case Qt::Key_Escape:
     this->close();
@@ -194,13 +176,13 @@ void OpenGLWindow::keyReleaseEvent(QKeyEvent *e)
 
 void OpenGLWindow::mouseMoveEvent(QMouseEvent *e)
 {
-  if (this->renderer) {
+  if (this->camera) {
 
     QPointF point = (e->pos() - this->_center);
     float sensitivity = 0.05f;
     glm::vec3 delta = glm::vec3(point.x(), point.y(), 0.0f);
     delta *= sensitivity;
-    this->renderer->getCamera()->rotate(delta);
+    this->camera->rotate(delta);
 
     QCursor::setPos(this->mapToGlobal(this->_center));
   }

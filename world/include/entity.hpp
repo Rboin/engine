@@ -1,5 +1,5 @@
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#ifndef ENTITY_H
+#define ENTITY_H
 
 #include <memory>
 #include <algorithm>
@@ -20,7 +20,7 @@ class Entity
 {
 public:
   Entity(std::shared_ptr<Axis> a = std::make_shared<Axis>(),
-         std::shared_ptr<ComponentList> c = std::make_shared<ComponentList>())
+         std::shared_ptr<ComponentMap> c = std::make_shared<ComponentMap>())
   {
     this->_axis = a;
     this->_components = c;
@@ -33,7 +33,7 @@ public:
     return this->_axis;
   }
 
-  virtual std::shared_ptr<ComponentList> getComponents()
+  virtual std::shared_ptr<ComponentMap> getComponents()
   {
     return this->_components;
   }
@@ -55,21 +55,13 @@ public:
 
   virtual void update(const float &delta)
   {
-    //  this->_rotation.x += (delta * 10);
-    //  this->_rotation.y += (delta * 10);
-    // Update logic (calculate velocities etc).
-    this->_components->update(delta);
-    const glm::vec3 &rotation = this->_components->getComponent<TransformComponent>()->getRotation();
-    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-    this->_axis->update(rotationMatrix);
+    // This method can be used to implement custom update behaviour (e.g. the player)
   }
 
 protected:
   int _id;
   std::shared_ptr<Axis> _axis;
-  std::shared_ptr<ComponentList> _components;
+  std::shared_ptr<ComponentMap> _components;
 };
 
 #endif // ENTITY_HPP

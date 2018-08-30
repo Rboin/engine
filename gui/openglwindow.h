@@ -8,7 +8,7 @@
 
 #include "glm/glm.hpp"
 #include "qtopenglproxy.hpp"
-#include "world.hpp"
+#include "world.h"
 #include "renderer.h"
 
 class OpenGLWindow : public QWindow
@@ -21,12 +21,15 @@ public:
 
   void initialize();
 
-  void setWorld(World<Entity> *world);
-  void setRenderer(Renderer *renderer);
+  void setWorld(World *world);
+  void setCamera(std::shared_ptr<Camera> camera);
+
+  std::shared_ptr<OpenGLFunctionProxy> createFunctionProxy();
+  Shader *createShader();
+  void initializeTimer();
 
 public slots:
   void update();
-  void render();
 private:
   long long _lastNanos;
   QPoint _center;
@@ -35,12 +38,8 @@ private:
   std::unique_ptr<QElapsedTimer> _elapsedTimer;
   std::shared_ptr<OpenGLFunctionProxy> functions;
   std::unique_ptr<QOpenGLContext> openglContext;
-  std::unique_ptr<Renderer> renderer;
-  std::unique_ptr<World<Entity>> world;
-
-  void initializeFunctionProxy();
-  void initializeShader();
-  void initializeTimer();
+  std::shared_ptr<Camera> camera;
+  std::unique_ptr<World> world;
 
   // QWindow interface
 protected:

@@ -14,7 +14,6 @@ std::shared_ptr<Camera> &PlayableEntity::getCamera()
 void PlayableEntity::update(const float &delta)
 {
   this->_camera->update(delta);
-  Entity::update(delta);
 }
 
 void PlayableEntity::setPosition(glm::vec3 p)

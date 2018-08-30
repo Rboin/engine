@@ -12,6 +12,7 @@ Axis::Axis(glm::vec3 up, glm::vec3 direction, glm::vec3 right)
 
 void Axis::update(const glm::mat4 &rotation)
 {
+
   glm::vec4 tmp = glm::vec4(this->_initial_direction.x, this->_initial_direction.y, this->_initial_direction.z, 0.0f);
   tmp = glm::normalize(rotation * tmp);
   this->_current_direction = glm::vec3(tmp.x, tmp.y, tmp.z);

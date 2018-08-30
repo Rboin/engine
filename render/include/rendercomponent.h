@@ -22,10 +22,6 @@ public:
 
 private:
   std::shared_ptr<RenderObject> _renderObject;
-
-  // Component interface
-public:
-  virtual void update(const float &delta) override;
 };
 
 #endif // RENDERCOMPONENT_H

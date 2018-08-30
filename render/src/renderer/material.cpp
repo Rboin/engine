@@ -16,6 +16,7 @@ void Material::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
   if (this->u_shinePower < 0) {
     this->u_shinePower = proxy->glGetUniformLocation(programId, "material.shininess");
   }
+  this->_initialized = true;
 
 //  if (this->u_ambient < 0) {
 //    this->u_ambient = proxy->glGetUniformLocation(programId, "material.ambient");

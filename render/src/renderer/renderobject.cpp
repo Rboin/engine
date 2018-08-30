@@ -27,6 +27,7 @@ void RenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionPr
   if (this->u_modelToProjection < 0) {
     this->u_modelToProjection = proxy->glGetUniformLocation(programId, "modelToProjection");
   }
+  this->initialized = true;
 }
 
 bool RenderObject::isInitialized() const

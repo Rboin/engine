@@ -8,6 +8,7 @@ FPSCamera::FPSCamera(const projection_information &p, glm::vec3 position) :
 
 void FPSCamera::update(const float &delta)
 {
+  // TODO: Rewrite camera to contain an entity to follow, set entity's position to camera position, same for rotation. (keep camera seperate)
   this->updatePositionBuffer();
   glm::vec3 position_velocity = this->_position_buffer * delta;
 

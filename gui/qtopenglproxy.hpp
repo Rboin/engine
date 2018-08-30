@@ -262,6 +262,11 @@ public:
     this->_functions->glBlendFunc(sfactor, dfactor);
   }
 
+  void glDepthFunc(GLenum func) override
+  {
+    this->_functions->glDepthFunc(func);
+  }
+
   void glCullFace(GLenum mode) override
   {
     this->_functions->glCullFace(mode);

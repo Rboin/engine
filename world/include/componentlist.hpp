@@ -12,11 +12,11 @@
  * This class is used to register components to an Entity. Each entity would have it's own ComponentList.
  * Specific components can be accessed by using the ComponentList::getComponent<U>() method.
  */
-class ComponentList
+class ComponentMap
 {
 public:
-  ComponentList() {}
-  ~ComponentList() {}
+  ComponentMap() {}
+  ~ComponentMap() {}
 
   /**
    * @brief addComponent
@@ -48,12 +48,18 @@ public:
     return component;
   }
 
-  void update(const float &delta)
+  template<class U>
+  bool hasComponent()
   {
-    for (std::pair<ComponentId, std::shared_ptr<Component>> element : this->_components) {
-      element.second->update(delta);
+    ComponentId requested = TypeId<Component>::get<U>();
+    auto iter = this->_components.find(requested);
+    bool result = false;
+    if (iter != this->_components.end()) {
+      result = true;
     }
+    return result;
   }
+
 private:
   std::unordered_map<ComponentId, std::shared_ptr<Component>> _components;
 };
