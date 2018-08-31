@@ -11,10 +11,12 @@
 typedef std::unique_ptr<Vertex> VertexPtr;
 typedef std::unique_ptr<Texture> TexturePtr;
 
-class RenderObject
+namespace RenderObjects
+{
+class BaseRenderObject
 {
 public:
-  RenderObject(Mesh *m);
+  BaseRenderObject(Mesh *m);
   virtual void initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy);
   bool isInitialized() const;
   std::unique_ptr<Mesh> &getMesh();
@@ -38,5 +40,6 @@ protected:
   void setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy);
   void updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection);
 };
+}
 
 #endif // RENDEROBJECT_H

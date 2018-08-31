@@ -1,11 +1,11 @@
 #include "rendercomponent.h"
 
-RenderComponent::RenderComponent(OwnerId owner, RenderObject *r) : TypedComponent(owner)
+RenderComponent::RenderComponent(OwnerId owner, RenderObjects::BaseRenderObject *r) : TypedComponent(owner)
 {
-  this->_renderObject = std::shared_ptr<RenderObject>(r);
+  this->_renderObject = std::shared_ptr<RenderObjects::BaseRenderObject>(r);
 }
 
-std::shared_ptr<RenderObject> RenderComponent::getRenderObject()
+std::shared_ptr<RenderObjects::BaseRenderObject> RenderComponent::getRenderObject()
 {
   return this->_renderObject;
 }

@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-RenderObject::RenderObject(Mesh *m) :
+RenderObjects::BaseRenderObject::BaseRenderObject(Mesh *m) :
   initialized(false),
   u_normalModel(-1),
   u_modelToWorld(-1),
@@ -13,7 +13,7 @@ RenderObject::RenderObject(Mesh *m) :
   this->_mesh = std::unique_ptr<Mesh>(m);
 }
 
-void RenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObjects::BaseRenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   if (!this->_mesh->isInitialized()) {
     this->_mesh->initialize(programId, proxy);
@@ -30,27 +30,27 @@ void RenderObject::initialize(GLuint programId, std::shared_ptr<OpenGLFunctionPr
   this->initialized = true;
 }
 
-bool RenderObject::isInitialized() const
+bool RenderObjects::BaseRenderObject::isInitialized() const
 {
   return this->initialized;
 }
 
-std::unique_ptr<Mesh> &RenderObject::getMesh()
+std::unique_ptr<Mesh> &RenderObjects::BaseRenderObject::getMesh()
 {
   return this->_mesh;
 }
 
-VertexPtr &RenderObject::getVertex()
+VertexPtr &RenderObjects::BaseRenderObject::getVertex()
 {
   return this->_mesh->getVertex();
 }
 
-TexturePtr &RenderObject::getTexture()
+TexturePtr &RenderObjects::BaseRenderObject::getTexture()
 {
   return this->_mesh->getTexture();
 }
 
-void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &modelMatrix, const glm::mat4 &viewProjectionMatrix)
+void RenderObjects::BaseRenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy> &proxy, const glm::mat4 &modelMatrix, const glm::mat4 &viewProjectionMatrix)
 {
   // Bind VAO and draw elements using indices.
   GLuint vao = this->_mesh->getVao();
@@ -65,7 +65,7 @@ void RenderObject::render(GLuint programId, std::shared_ptr<OpenGLFunctionProxy>
   this->unbind(proxy);
 }
 
-void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObjects::BaseRenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   // Set matrices (normal -> lightDirection, model -> world and model -> projection)
   proxy->glUniformMatrix3fv(this->u_normalModel, 1, GL_FALSE, glm::value_ptr(this->_normalModel));
@@ -80,17 +80,17 @@ void RenderObject::setUniforms(GLuint program, std::shared_ptr<OpenGLFunctionPro
   proxy->glUniform1fv(this->_mesh->getMaterial()->getUniformShininess(), 1, &power);
 }
 
-void RenderObject::bind(GLuint vao, std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObjects::BaseRenderObject::bind(GLuint vao, std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   proxy->glBindVertexArray(vao);
 }
 
-void RenderObject::unbind(std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObjects::BaseRenderObject::unbind(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   proxy->glBindVertexArray(0);
 }
 
-void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
+void RenderObjects::BaseRenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 {
   std::unique_ptr<Texture> &texture = this->_mesh->getMaterial()->getTexture();
   proxy->glUniform1i(texture->getUniformDiffuse(), 0);
@@ -110,7 +110,7 @@ void RenderObject::setTextures(std::shared_ptr<OpenGLFunctionProxy> &proxy)
 //  }
 }
 
-void RenderObject::updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection)
+void RenderObjects::BaseRenderObject::updateMatrices(const glm::mat4 &model, const glm::mat4 &viewProjection)
 {
   this->_normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
   this->_modelToWorld = model;

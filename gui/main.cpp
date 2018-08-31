@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileInfo>
+#include <pointlight.h>
+#include <directionallight.h>
 
 #include "lightrenderobject.h"
 #include "transformcomponent.h"
@@ -245,13 +247,13 @@ int main(int argc, char **argv)
 
 
   // BOX
-  RenderObject *ro = createRenderObject<RenderObject>(32.0f,
-                                                      ":/resources/images/steelborder_woodbox.png",
-                                                      ":/resources/images/container2_specular.png",
-                                                      ":/resources/images/matrix.jpg",
-                                                      glm::vec3(1.0f, 0.5f, 0.31f),
-                                                      glm::vec3(1.0f, 0.5f, 0.31f),
-                                                      glm::vec3(0.5f, 0.5f, 0.5f));
+  RenderObjects::BaseRenderObject *ro = createRenderObject<RenderObjects::BaseRenderObject>(32.0f,
+                                                                                            ":/resources/images/steelborder_woodbox.png",
+                                                                                            ":/resources/images/container2_specular.png",
+                                                                                            ":/resources/images/matrix.jpg",
+                                                                                            glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                            glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                            glm::vec3(0.5f, 0.5f, 0.5f));
   auto *box = new Entity;
   box->addComponent(
     new TransformComponent(
@@ -265,15 +267,15 @@ int main(int argc, char **argv)
   bool hasRenderComponent = box->getComponents()->hasComponent<RenderComponent>();
 
 
-  // LIGHT OBJECT
-  LightRenderObject *lightRenderObject = createRenderObject<LightRenderObject>(-1,
-                                                                               ":/resources/images/awesomeface.png",
-                                                                               ":/resources/images/awesomeface.png",
-                                                                               ":/resources/images/default.png",
-                                                                               glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                               glm::vec3(0.5f, 0.5f, 0.5f),
-                                                                               glm::vec3(1.0f, 1.0f, 1.0f));
-  lightRenderObject->setIsPointLight(true);
+  // LIGHT OBJECT (pointlights)
+  RenderObjects::PointLight *lightRenderObject1 = createRenderObject<RenderObjects::PointLight>(-1,
+                                                                                                ":/resources/images/awesomeface.png",
+                                                                                                ":/resources/images/awesomeface.png",
+                                                                                                ":/resources/images/default.png",
+                                                                                                glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                                                glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                                glm::vec3(1.0f, 1.0f, 1.0f));
+  lightRenderObject1->setIndex(0);
   auto *light1 = new Entity;
   light1->addComponent(
     new TransformComponent(
@@ -282,17 +284,52 @@ int main(int argc, char **argv)
       glm::vec3(0.0f),
       glm::vec3(0.1f)
     ));
-  light1->addComponent(new RenderComponent(light1->getId(), lightRenderObject));
+  light1->addComponent(new RenderComponent(light1->getId(), lightRenderObject1));
 
+  RenderObjects::PointLight *lightRenderObject2 = createRenderObject<RenderObjects::PointLight>(-1,
+                                                                                                ":/resources/images/awesomeface.png",
+                                                                                                ":/resources/images/awesomeface.png",
+                                                                                                ":/resources/images/default.png",
+                                                                                                glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                                                glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                                glm::vec3(1.0f, 1.0f, 1.0f));
+  lightRenderObject2->setIndex(1);
+  auto *light2 = new Entity;
+  light2->addComponent(
+    new TransformComponent(
+      light2->getId(),
+      glm::vec3(0.0f, 0.5f, 1.0f),
+      glm::vec3(0.0f),
+      glm::vec3(0.1f)
+    ));
+  light2->addComponent(new RenderComponent(light2->getId(), lightRenderObject2));
+
+  // Directional light
+  RenderObjects::DirectionalLight *dirLightRenderObject = createRenderObject<RenderObjects::DirectionalLight> (-1,
+                                                                                                               ":/resources/images/awesomeface.png",
+                                                                                                               ":/resources/images/awesomeface.png",
+                                                                                                               ":/resources/images/default.png",
+                                                                                                               glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                                                               glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                                               glm::vec3(1.0f, 1.0f, 1.0f));
+
+  auto dirLight = new Entity;
+  dirLight->addComponent(new TransformComponent(
+                           dirLight->getId(),
+                           glm::vec3(0.0f, 0.0f, 0.0f),
+                           glm::vec3(0.0f),
+                           glm::vec3(0.1f)
+                         ));
+  dirLight->addComponent(new RenderComponent(dirLight->getId(), dirLightRenderObject));
 
   // PLAYER
-  RenderObject *playerRenderObject = createRenderObject<RenderObject>(0,
-                                                                      ":/resources/images/default.png",
-                                                                      ":/resources/images/default.png",
-                                                                      ":/resources/images/default.png",
-                                                                      glm::vec3(1.0f, 0.0f, 0.0f),
-                                                                      glm::vec3(0.0f, 1.0f, 0.0f),
-                                                                      glm::vec3(0.0f, 0.0f, 1.0f));
+  RenderObjects::BaseRenderObject *playerRenderObject = createRenderObject<RenderObjects::BaseRenderObject>(0,
+                                                                                                            ":/resources/images/default.png",
+                                                                                                            ":/resources/images/default.png",
+                                                                                                            ":/resources/images/default.png",
+                                                                                                            glm::vec3(1.0f, 0.0f, 0.0f),
+                                                                                                            glm::vec3(0.0f, 1.0f, 0.0f),
+                                                                                                            glm::vec3(0.0f, 0.0f, 1.0f));
   auto *player = new PlayableEntity(camera);
   player->addComponent(
     new TransformComponent(
@@ -310,8 +347,9 @@ int main(int argc, char **argv)
 
   Renderer *renderer = new Renderer();
 
-  Scene *scene = new Scene(camera, std::shared_ptr<World>(world), player);
-  scene->addLight(light1);
+  Scene *scene = new Scene(camera, std::shared_ptr<World>(world), player, dirLight);
+  scene->addPointLight(light1);
+  scene->addPointLight(light2);
 
   window.setRenderer(renderer);
   window.setScene(scene);

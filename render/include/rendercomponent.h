@@ -11,9 +11,9 @@
 class RenderComponent : public TypedComponent<RenderComponent>
 {
 public:
-  RenderComponent(OwnerId owner, RenderObject *r);
+  RenderComponent(OwnerId owner, RenderObjects::BaseRenderObject *r);
 
-  std::shared_ptr<RenderObject> getRenderObject();
+  std::shared_ptr<RenderObjects::BaseRenderObject> getRenderObject();
 
   void render(unsigned int program,
               std::shared_ptr<OpenGLFunctionProxy> proxy,
@@ -21,7 +21,7 @@ public:
               const glm::mat4 &viewProjection);
 
 private:
-  std::shared_ptr<RenderObject> _renderObject;
+  std::shared_ptr<RenderObjects::BaseRenderObject> _renderObject;
 };
 
 #endif // RENDERCOMPONENT_H

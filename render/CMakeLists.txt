@@ -21,6 +21,8 @@ set(PUBLIC_HEADERS
     include/renderobject.h
     include/fpscamera.h
     include/lightrenderobject.h
+    include/pointlight.h
+    include/directionallight.h
     include/rendercomponent.h
     include/scene.h)
 
@@ -37,6 +39,8 @@ set(SOURCE_FILES
     src/camera/fpscamera.cpp
     src/entities/playableentity.cpp
     src/renderer/lightrenderobject.cpp
+    src/renderer/pointlight.cpp
+    src/renderer/directionallight.cpp
     src/renderer/rendercomponent.cpp
     src/renderer/scene.cpp
     )
