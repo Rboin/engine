@@ -65,13 +65,6 @@ public:
     return this->_systems;
   }
 
-  void update(const double &delta)
-  {
-    for (auto iter = this->_systems.begin(); iter != this->_systems.end(); ++iter) {
-      (*iter)->update(delta, this->_entities);
-    }
-  }
-
 private:
   std::unique_ptr<Entity> _light;
   std::vector<std::unique_ptr<Entity>> _entities;
