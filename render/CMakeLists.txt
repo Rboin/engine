@@ -21,7 +21,8 @@ set(PUBLIC_HEADERS
     include/renderobject.h
     include/fpscamera.h
     include/lightrenderobject.h
-    include/rendercomponent.h)
+    include/rendercomponent.h
+    include/scene.h)
 
 
 set(SOURCE_FILES
@@ -37,6 +38,7 @@ set(SOURCE_FILES
     src/entities/playableentity.cpp
     src/renderer/lightrenderobject.cpp
     src/renderer/rendercomponent.cpp
+    src/renderer/scene.cpp
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

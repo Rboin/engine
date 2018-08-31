@@ -9,11 +9,10 @@
 #include "renderobject.h"
 #include "shaderinformation.h"
 
-Renderer::Renderer(std::shared_ptr<Camera> c) :
+Renderer::Renderer() :
   _initialized(false),
   u_cameraPosition(-1)
 {
-  this->_camera = c;
 }
 
 Renderer::~Renderer()
@@ -31,6 +30,11 @@ bool Renderer::hasFunctions()
 void Renderer::setFunctions(std::shared_ptr<OpenGLFunctionProxy> f)
 {
   this->_proxy = f;
+}
+
+std::shared_ptr<OpenGLFunctionProxy> Renderer::getFunctionProxy()
+{
+  return this->_proxy;
 }
 
 void Renderer::initialize()
@@ -66,56 +70,17 @@ void Renderer::initialize()
   this->_proxy->glDeleteShader(fShader);
 }
 
-void Renderer::initializeRenderObjects(std::vector<std::unique_ptr<Entity> > &entities)
-{
-
-  for (auto iter = entities.begin(); iter != entities.end(); ++iter) {
-    std::shared_ptr<RenderComponent> renderComponent = (*iter)->getComponents()->getComponent<RenderComponent>();
-    if (renderComponent) {
-      std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
-      if (!renderObject->isInitialized()) {
-        renderObject->initialize(this->_program, this->_proxy);
-      }
-    }
-  }
-}
-
-void Renderer::initializeRenderObjects(std::unique_ptr<World> &world)
-{
-
-  // TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
-
-  // Get all entities
-  const EntityVector &renderables = world->getEntities();
-  EntityVectorIterator it;
-  // Initialize renderobjects in a loop.
-  for(it = renderables.begin(); it != renderables.end(); it++) {
-    const UniqueEntityPtr &currentEntity = (*it);
-    std::shared_ptr<RenderComponent> renderComponent = currentEntity->getComponents()->getComponent<RenderComponent>();
-    if (renderComponent != nullptr) {
-      std::shared_ptr<RenderObject> currentRenderObject = renderComponent->getRenderObject();
-      if (!currentRenderObject->isInitialized()) {
-        currentRenderObject->initialize(this->_program, this->_proxy);
-      }
-    }
-
-  }
-
-}
-
 void Renderer::addShader(Shader *shader)
 {
   this->_shader = std::unique_ptr<Shader>(shader);
 }
 
-void Renderer::render(std::unique_ptr<World> &world)
+void Renderer::render(std::unique_ptr<Scene> &scene)
 {
 
   if (this->_proxy) {
     if(!this->_initialized) {
       this->initialize();
-      this->initializeRenderObjects(world);
-
       this->_initialized = true;
     }
     this->_proxy->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -125,56 +90,40 @@ void Renderer::render(std::unique_ptr<World> &world)
     if(this->u_cameraPosition < 0) {
       this->u_cameraPosition = this->_proxy->glGetUniformLocation(this->_program, "cameraPosition");
     }
-
-// TODO: MAKE RENDERER A RENDERCOMPONENTHANDLER
-    glm::vec3 cameraPosition = this->_camera->getPosition();
+    // Set camera position.
+    glm::vec3 cameraPosition = scene->getCamera()->getPosition();
     this->_proxy->glUniform3fv(this->u_cameraPosition, 1, glm::value_ptr(cameraPosition));
-    glm::mat4 viewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
-    const EntityVector &v = world->getEntities();
-    EntityVectorIterator iter;
-    for(iter = v.begin(); iter != v.end(); ++iter) {
-      const UniqueEntityPtr &entity = (*iter);
-      std::shared_ptr<RenderComponent> renderComponent = entity->getComponents()->getComponent<RenderComponent>();
-      if (renderComponent != nullptr) {
-        std::shared_ptr<RenderObject> renderObject = renderComponent->getRenderObject();
-        renderComponent->render(this->_program, this->_proxy, *entity, viewProjection);
-      }
-    }
+
+    this->_currentViewProjection = scene->getCamera()->getProjectionMatrix() * scene->getCamera()->getViewMatrix();
+    // Set light uniforms and render objects.
+    this->renderLights(scene->getLights());
+    // Render entities.
+    this->renderEntities(scene->getWorld()->getEntities());
     this->_proxy->glUseProgram(0);
   }
 
 }
 
-std::shared_ptr<Camera> &Renderer::getCamera()
+void Renderer::renderEntities(std::vector<std::unique_ptr<Entity> > &entities)
 {
-  return this->_camera;
+  EntityVectorIterator iter;
+  for(iter = entities.begin(); iter != entities.end(); ++iter) {
+    std::unique_ptr<Entity> &entity = (*iter);
+    this->renderEntity(entity);
+  }
 }
 
-
-void Renderer::update(const float &delta, std::vector<std::unique_ptr<Entity> > &entities)
+void Renderer::renderLights(std::vector<std::unique_ptr<Entity> > &lights)
 {
-  if (this->_proxy && !this->_initialized) {
-    this->initialize();
-    this->_initialized = true;
+  EntityVectorIterator iter;
+  for(iter = lights.begin(); iter != lights.end(); ++iter) {
+    std::unique_ptr<Entity> &entity = (*iter);
+    this->renderEntity(entity);
   }
 
-  this->_proxy->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  this->_proxy->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  this->_proxy->glUseProgram(this->_program);
-
-  if(this->u_cameraPosition < 0) {
-    this->u_cameraPosition = this->_proxy->glGetUniformLocation(this->_program, "cameraPosition");
-  }
-  glm::vec3 cameraPosition = this->_camera->getPosition();
-  this->_proxy->glUniform3fv(this->u_cameraPosition, 1, glm::value_ptr(cameraPosition));
-  this->_currentViewProjection = this->_camera->getProjectionMatrix() * this->_camera->getViewMatrix();
-
-  TypedSystem::update(delta, entities);
-
-  this->_proxy->glUseProgram(0);
 }
 
-void Renderer::update(const float &delta, std::unique_ptr<Entity> &entity)
+void Renderer::renderEntity(std::unique_ptr<Entity> &entity)
 {
   std::shared_ptr<RenderComponent> renderComponent = entity->getComponents()->getComponent<RenderComponent>();
   std::shared_ptr<TransformComponent> transformComponent = entity->getComponents()->getComponent<TransformComponent>();

@@ -238,9 +238,10 @@ int main(int argc, char **argv)
 
   std::shared_ptr<Camera> camera = std::shared_ptr<FPSCamera>(
                                      new FPSCamera({45.0f, 0.1f, 100.0f},
-                                                   glm::vec3(0.0f, 0.0f, -1.0f)
+                                                   glm::vec3(-2.0f, 0.0f, -1.0f)
                                                   )
                                    );
+  camera->setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
 
   // BOX
@@ -306,25 +307,21 @@ int main(int argc, char **argv)
 
   World *world = createWorld();
   world->addEntity(box);
-  world->addEntity(player);
-  world->addEntity(light1);
 
-  Renderer *renderer = new Renderer(camera);
+  Renderer *renderer = new Renderer();
 
-  window.setWorld(world);
-//  window.setRenderer(new Renderer(camera));
+  Scene *scene = new Scene(camera, std::shared_ptr<World>(world), player);
+  scene->addLight(light1);
+
+  window.setRenderer(renderer);
+  window.setScene(scene);
   window.setHeight(720);
   window.setWidth(1280);
 
-  renderer->addShader(window.createShader());
-  renderer->setFunctions(window.createFunctionProxy());
-
   // Add systems to the world.
   world->addSystem(new TransformationSystem);
-  world->addSystem(renderer);
 
-  window.setCamera(camera);
-  window.initializeTimer();
+  window.initialize();
   window.show();
 
   return app.exec();

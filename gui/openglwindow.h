@@ -10,6 +10,7 @@
 #include "qtopenglproxy.hpp"
 #include "world.h"
 #include "renderer.h"
+#include "scene.h"
 
 class OpenGLWindow : public QWindow
 {
@@ -21,25 +22,25 @@ public:
 
   void initialize();
 
-  void setWorld(World *world);
-  void setCamera(std::shared_ptr<Camera> camera);
+  void setRenderer(Renderer *renderer);
+  void setScene(Scene *scene);
 
-  std::shared_ptr<OpenGLFunctionProxy> createFunctionProxy();
-  Shader *createShader();
+  void createFunctionProxy();
+  void createShader();
   void initializeTimer();
 
 public slots:
   void update();
+  void render();
 private:
   long long _lastNanos;
   QPoint _center;
 
   std::unique_ptr<QTimer> _updateTimer, _renderTimer;
   std::unique_ptr<QElapsedTimer> _elapsedTimer;
-  std::shared_ptr<OpenGLFunctionProxy> functions;
   std::unique_ptr<QOpenGLContext> openglContext;
-  std::shared_ptr<Camera> camera;
-  std::unique_ptr<World> world;
+  std::unique_ptr<Renderer> _renderer;
+  std::unique_ptr<Scene> _scene;
 
   // QWindow interface
 protected:

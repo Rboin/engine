@@ -19,18 +19,6 @@ public:
     this->_systems = std::vector<std::unique_ptr<System>>();
   }
 
-  void initialize() {}
-
-  void setLight(Entity *entity)
-  {
-    this->_light = std::unique_ptr<Entity>(entity);
-  }
-
-  std::unique_ptr<Entity> &getLight()
-  {
-    return this->_light;
-  }
-
   void addEntity(Entity *entity)
   {
     this->_entities.push_back(std::unique_ptr<Entity>(entity));
@@ -47,6 +35,11 @@ public:
     }),
     this->_entities.end()
     );
+  }
+
+  std::vector<std::unique_ptr<Entity>> &getEntities()
+  {
+    return this->_entities;
   }
 
   void addSystem(System *h)
@@ -67,9 +60,9 @@ public:
     );
   }
 
-  const std::vector<std::unique_ptr<Entity>> &getEntities() const
+  std::vector<std::unique_ptr<System>> &getSystems()
   {
-    return this->_entities;
+    return this->_systems;
   }
 
   void update(const double &delta)
