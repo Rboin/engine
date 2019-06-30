@@ -46,8 +46,12 @@ void RenderObjects::DirectionalLight::setUniforms(GLuint program, std::shared_pt
   // Set Light uniform position
   proxy->glUniform3fv(this->u_direction, 1, glm::value_ptr(this->_direction));
   // Set Light uniform color
-  proxy->glUniform3fv(this->u_ambient, 1, glm::value_ptr(this->_mesh->getMaterial()->getAmbientColor()));
-  proxy->glUniform3fv(this->u_diffuse, 1, glm::value_ptr(this->_mesh->getMaterial()->getDiffuseColor()));
-  proxy->glUniform3fv(this->u_specular, 1, glm::value_ptr(this->_mesh->getMaterial()->getSpecularColor()));
+  std::shared_ptr<Material> material = _mesh->getMaterial();
+  glm::vec3 ambient = material->getAmbientColor();
+  glm::vec3 diffuse = material->getDiffuseColor();
+  glm::vec3 specular = material->getSpecularColor();
+  proxy->glUniform3fv(this->u_ambient, 1, glm::value_ptr(ambient));
+  proxy->glUniform3fv(this->u_diffuse, 1, glm::value_ptr(diffuse));
+  proxy->glUniform3fv(this->u_specular, 1, glm::value_ptr(specular));
   BaseRenderObject::setUniforms(program, proxy);
 }

@@ -8,7 +8,9 @@
 class TransformComponent : public TypedComponent<TransformComponent>
 {
 public:
-  TransformComponent(int owner, glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
+  TransformComponent(long owner, glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
+  ~TransformComponent();
+
 
   const glm::vec3 &getPosition();
   void setPosition(glm::vec3 p);

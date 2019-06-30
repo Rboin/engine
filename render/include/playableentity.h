@@ -3,13 +3,15 @@
 
 #include <memory>
 
-#include "entity.hpp"
-#include "camera.hpp"
+#include "entity.h"
+#include "camera.h"
 
 class PlayableEntity : public Entity
 {
 public:
   PlayableEntity(std::shared_ptr<Camera> c);
+
+  ~PlayableEntity();
 
   std::shared_ptr<Camera> &getCamera();
 
@@ -17,7 +19,7 @@ public:
   void setRotation(glm::vec3 r);
   void setScaling(glm::vec3 s);
 
-  void update(const float &delta) override;
+//  void update(const double delta) override;
 private:
   std::shared_ptr<Camera> _camera;
 };

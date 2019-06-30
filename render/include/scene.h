@@ -10,7 +10,8 @@
 class Scene
 {
 public:
-  Scene(std::shared_ptr<Camera> camera, std::shared_ptr<World> world, PlayableEntity *player, Entity *directionalLight);
+  Scene(std::shared_ptr<Camera> camera, std::shared_ptr<World> world);
+//  Scene(std::shared_ptr<Camera> camera, std::shared_ptr<World> world, PlayableEntity *player, Entity *directionalLight);
 
   void setCamera(std::shared_ptr<Camera> camera);
   std::shared_ptr<Camera> getCamera();
@@ -18,19 +19,20 @@ public:
   void setWorld(std::shared_ptr<World> world);
   std::shared_ptr<World> getWorld();
 
-  std::unique_ptr<PlayableEntity> &getPlayer();
+//  std::unique_ptr<PlayableEntity> &getPlayer();
 
   void addPointLight(Entity *light);
   std::vector<std::unique_ptr<Entity>> &getPointLights();
+  void addDirectionalLight(Entity *directionalLight);
   std::unique_ptr<Entity> &getDirectionalLight();
 
-  void update(const double &delta);
+  void update(const double delta);
 
 private:
   std::shared_ptr<Camera> _camera;
   std::shared_ptr<World> _world;
-  std::unique_ptr<PlayableEntity> _player;
-  std::unique_ptr<Entity> _directionalLight;
+//  std::unique_ptr<PlayableEntity> _player;
+  std::vector<std::unique_ptr<Entity>> directionalLights;
   std::vector<std::unique_ptr<Entity>> _pointLights;
 };
 

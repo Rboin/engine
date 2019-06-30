@@ -2,11 +2,16 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-TransformComponent::TransformComponent(int owner, glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
+TransformComponent::TransformComponent(long owner, glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
   : TypedComponent(owner),
     _position(position),
     _rotation(rotation),
     _scale(scaling)
+{
+
+}
+
+TransformComponent::~TransformComponent()
 {
 
 }

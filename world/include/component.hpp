@@ -3,8 +3,8 @@
 
 #include "typeid.hpp"
 
-using OwnerId = int;
-using ComponentId = int;
+using OwnerId = long;
+using ComponentId = long;
 
 class Component
 {
@@ -12,25 +12,25 @@ public:
 
   Component(OwnerId owner)
   {
-    this->_owner_id = owner;
-    this->_id = -1;
+    ownerId = owner;
+    id = -1;
   }
 
   virtual ~Component() {}
 
-  const ComponentId getComponentId() const
+  ComponentId getComponentId() const
   {
-    return this->_id;
+    return id;
   }
 
-  const OwnerId getOwnerId() const
+  OwnerId getOwnerId() const
   {
-    return this->_owner_id;
+    return ownerId;
   }
 
 protected:
-  OwnerId _owner_id;
-  ComponentId _id;
+  OwnerId ownerId;
+  ComponentId id;
 };
 
 #endif // COMPONENT_HPP

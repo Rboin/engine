@@ -16,34 +16,36 @@ class ComponentMap
 {
 public:
   ComponentMap() {}
-  ~ComponentMap() {}
+  ~ComponentMap() {
+      if (_components.size() > 0) {
+          for(auto iterator = this->_components.begin(); iterator != this->_components.end(); ++iterator) {
+            delete iterator->second;
+          }
+          _components.clear();
+      }
+  }
 
   /**
    * @brief addComponent
    * @param c
    */
-  void addComponent(Component *c)
+  void addComponent(Component *component)
   {
-    this->_components.insert({c->getComponentId(), std::shared_ptr<Component>(c)});
-  }
-
-  void addComponent(std::shared_ptr<Component> c)
-  {
-    this->_components.insert({c->getComponentId(), c});
+    this->_components.insert({component->getComponentId(), component});
   }
 
   /**
    * Returns the component of the requested type.
    */
   template<class U>
-  std::shared_ptr<U> getComponent()
+  U *getComponent()
   {
     ComponentId requested = TypeId<Component>::get<U>();
     auto iter = this->_components.find(requested);
-    std::shared_ptr<U> component = nullptr;
+    U *component = nullptr;
     if (iter != this->_components.end()) {
       // Found the requested component.
-      component = std::static_pointer_cast<U>(iter->second);
+      component = (U *) iter->second;
     }
     return component;
   }
@@ -61,7 +63,7 @@ public:
   }
 
 private:
-  std::unordered_map<ComponentId, std::shared_ptr<Component>> _components;
+  std::unordered_map<ComponentId, Component *> _components;
 };
 
 #endif // COMPONENTLIST_H

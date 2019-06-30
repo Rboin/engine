@@ -6,10 +6,14 @@
 #include "mesh.h"
 #include "texture.h"
 #include "vertex.h"
-#include "entity.hpp"
+#include "entity.h"
 
 typedef std::unique_ptr<Vertex> VertexPtr;
 typedef std::unique_ptr<Texture> TexturePtr;
+
+//TODO: Change BaseRenderObject to RenderComponent
+//TODO: Change Renderer to RenderSystem, move drawing logic ((un-)bind, setTextures, updateMatrices, render and setUniforms) to RenderSystem
+// RenderComponent should only hold textures, vertices, and uniforms
 
 namespace RenderObjects
 {

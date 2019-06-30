@@ -2,8 +2,7 @@
 #define TRANSFORMATIONSYSTEM_H
 
 #include "typedsystem.hpp"
-
-
+#include "transformcomponent.h"
 
 class TransformationSystem : public TypedSystem<TransformComponent>
 {
@@ -12,7 +11,7 @@ public:
 
   // TypedSystem interface
 public:
-  virtual void update(const float &delta, std::unique_ptr<Entity> &entity) override;
+  virtual void handle(const double delta, std::unique_ptr<Entity> &entity) override;
 };
 
 #endif // TRANSFORMATIONSYSTEM_H

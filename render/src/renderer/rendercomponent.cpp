@@ -16,7 +16,7 @@ void RenderComponent::render(unsigned int program,
                              const glm::mat4 &viewProjection)
 {
   std::shared_ptr<ComponentMap> componentList = entity.getComponents();
-  std::shared_ptr<TransformComponent> transformComponent = componentList->getComponent<TransformComponent>();
+  TransformComponent *transformComponent = componentList->getComponent<TransformComponent>();
   if (transformComponent != nullptr) {
     const glm::mat4 &modelMatrix = transformComponent->getModel();
     this->_renderObject->render(program, proxy, modelMatrix, viewProjection);

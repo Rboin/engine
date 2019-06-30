@@ -97,7 +97,7 @@ void Renderer::render(std::unique_ptr<Scene> &scene)
     this->_currentViewProjection = scene->getCamera()->getProjectionMatrix() * scene->getCamera()->getViewMatrix();
     // Set light uniforms and render objects.
     this->renderEntity(scene->getDirectionalLight());
-    this->renderLights(scene->getPointLights());
+    this->renderEntities(scene->getPointLights());
     // Render entities.
     this->renderEntities(scene->getWorld()->getEntities());
     this->_proxy->glUseProgram(0);
@@ -126,8 +126,8 @@ void Renderer::renderLights(std::vector<std::unique_ptr<Entity> > &lights)
 
 void Renderer::renderEntity(std::unique_ptr<Entity> &entity)
 {
-  std::shared_ptr<RenderComponent> renderComponent = entity->getComponents()->getComponent<RenderComponent>();
-  std::shared_ptr<TransformComponent> transformComponent = entity->getComponents()->getComponent<TransformComponent>();
+  RenderComponent *renderComponent = entity->getComponents()->getComponent<RenderComponent>();
+  TransformComponent *transformComponent = entity->getComponents()->getComponent<TransformComponent>();
   std::shared_ptr<RenderObjects::BaseRenderObject> renderObject = renderComponent->getRenderObject();
 
   if (!renderObject->isInitialized()) {

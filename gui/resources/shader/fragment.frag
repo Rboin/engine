@@ -66,7 +66,6 @@ vec3 calculatePointLight(Light light, vec3 normal, vec3 fragmentPosition, vec3 v
     float linearReduction = (light.constant + light.linear) * distance;
     float quadraticReduction = light.quadratic * (distance * distance);
     float attenuation = 1.0 / (linearReduction + quadraticReduction);
-
     vec3 diffuseTexture = vec3(texture(material.diffuse, TextureCoordinate));
     vec3 ambient = light.ambient * diffuseTexture;
     vec3 diffuse = light.diffuse * diffuseScalar * diffuseTexture;

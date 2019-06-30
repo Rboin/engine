@@ -18,7 +18,7 @@ class OpenGLWindow : public QWindow
 public:
   explicit OpenGLWindow(QWindow *parent = nullptr);
   OpenGLWindow(QWindow *parent, QSurfaceFormat f);
-  ~OpenGLWindow();
+  ~OpenGLWindow() override;
 
   void initialize();
 

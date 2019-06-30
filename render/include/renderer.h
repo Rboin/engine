@@ -2,12 +2,12 @@
 #define RENDERER_H
 
 #include <memory>
+#include <glm/glm.hpp>
 
 #include "shader.h"
 #include "openglfunctionproxy.h"
-#include "glm/glm.hpp"
 #include "world.h"
-#include "camera.hpp"
+#include "camera.h"
 #include "rendercomponent.h"
 #include "scene.h"
 

@@ -46,11 +46,9 @@ TextureImage *loadImage(const char *fileName, GLenum imageFormat, GLint internal
 
 }
 
-
-
 Entity *createEntity(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling)
 {
-  Entity *e = new Entity;//new MovingEntity();
+  Entity *e = new Entity;
   e->addComponent(new TransformComponent(e->getId(), position, rotation, scaling));
   return e;
 }
@@ -238,11 +236,7 @@ int main(int argc, char **argv)
   QSurfaceFormat::setDefaultFormat(format);
   OpenGLWindow window(nullptr, format);
 
-  std::shared_ptr<Camera> camera = std::shared_ptr<FPSCamera>(
-                                     new FPSCamera({45.0f, 0.1f, 100.0f},
-                                                   glm::vec3(-2.0f, 0.0f, -1.0f)
-                                                  )
-                                   );
+  std::shared_ptr<Camera> camera = std::shared_ptr<FPSCamera>(new FPSCamera({45.0f, 0.1f, 100.0f}, glm::vec3(-2.0f, 0.0f, -1.0f)));
   camera->setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
 
@@ -264,7 +258,25 @@ int main(int argc, char **argv)
     )
   );
   box->addComponent(new RenderComponent(box->getId(), ro));
-  bool hasRenderComponent = box->getComponents()->hasComponent<RenderComponent>();
+
+  // BOX2
+  RenderObjects::BaseRenderObject *ro2 = createRenderObject<RenderObjects::BaseRenderObject>(32.0f,
+                                                                                            ":/resources/images/steelborder_woodbox.png",
+                                                                                            ":/resources/images/container2_specular.png",
+                                                                                            ":/resources/images/matrix.jpg",
+                                                                                            glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                            glm::vec3(1.0f, 0.5f, 0.31f),
+                                                                                            glm::vec3(0.5f, 0.5f, 0.5f));
+  auto *box2 = new Entity;
+  box2->addComponent(
+    new TransformComponent(
+      box2->getId(),
+      glm::vec3(2.0f, 0.0f, 0.0f),
+      glm::vec3(0.0f),
+      glm::vec3(1.0f)
+    )
+  );
+  box2->addComponent(new RenderComponent(box2->getId(), ro2));
 
 
   // LIGHT OBJECT (pointlights)
@@ -306,27 +318,27 @@ int main(int argc, char **argv)
 
   // Directional light
   RenderObjects::DirectionalLight *dirLightRenderObject = createRenderObject<RenderObjects::DirectionalLight> (-1,
-                                                                                                               ":/resources/images/awesomeface.png",
-                                                                                                               ":/resources/images/awesomeface.png",
-                                                                                                               ":/resources/images/default.png",
-                                                                                                               glm::vec3(0.2f, 0.2f, 0.2f),
-                                                                                                               glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                                                               ":/resources/images/crate.png",
+                                                                                                               ":/resources/images/crate.png",
+                                                                                                               ":/resources/images/crate.png",
+                                                                                                               glm::vec3(1.0f, 1.0f, 1.0f),
+                                                                                                               glm::vec3(1.0f, 1.0f, 1.0f),
                                                                                                                glm::vec3(1.0f, 1.0f, 1.0f));
 
   auto dirLight = new Entity;
   dirLight->addComponent(new TransformComponent(
                            dirLight->getId(),
-                           glm::vec3(0.0f, 0.0f, 0.0f),
+                           glm::vec3(1.0f, 0.5f, 0.0f),
                            glm::vec3(0.0f),
                            glm::vec3(0.1f)
                          ));
   dirLight->addComponent(new RenderComponent(dirLight->getId(), dirLightRenderObject));
 
   // PLAYER
-  RenderObjects::BaseRenderObject *playerRenderObject = createRenderObject<RenderObjects::BaseRenderObject>(0,
-                                                                                                            ":/resources/images/default.png",
-                                                                                                            ":/resources/images/default.png",
-                                                                                                            ":/resources/images/default.png",
+  RenderObjects::BaseRenderObject *playerRenderObject = createRenderObject<RenderObjects::BaseRenderObject>(1,
+                                                                                                            ":/resources/images/crate.png",
+                                                                                                            ":/resources/images/crate.png",
+                                                                                                            ":/resources/images/crate.png",
                                                                                                             glm::vec3(1.0f, 0.0f, 0.0f),
                                                                                                             glm::vec3(0.0f, 1.0f, 0.0f),
                                                                                                             glm::vec3(0.0f, 0.0f, 1.0f));
@@ -336,7 +348,7 @@ int main(int argc, char **argv)
       player->getId(),
       camera->getPosition(),
       camera->getRotationVector(),
-      glm::vec3(0.0f)
+      glm::vec3(1.0f)
     ));
   player->addComponent(new RenderComponent(player->getId(), playerRenderObject));
 
@@ -344,10 +356,13 @@ int main(int argc, char **argv)
 
   World *world = createWorld();
   world->addEntity(box);
+  world->addEntity(box2);
+  world->addEntity(player);
 
   Renderer *renderer = new Renderer();
 
-  Scene *scene = new Scene(camera, std::shared_ptr<World>(world), player, dirLight);
+  Scene *scene = new Scene(camera, std::shared_ptr<World>(world));
+  scene->addDirectionalLight(dirLight);
   scene->addPointLight(light1);
   scene->addPointLight(light2);
 

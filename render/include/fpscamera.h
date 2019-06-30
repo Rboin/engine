@@ -1,7 +1,7 @@
 #ifndef FPSCAMERA_H
 #define FPSCAMERA_H
 
-#include "camera.hpp"
+#include "camera.h"
 
 class FPSCamera : public Camera
 {
@@ -21,7 +21,7 @@ public:
    * @brief update
    * @param delta A float representing the delta time in seconds.
    */
-  void update(const float &delta) override;
+  void update(const double delta) override;
 
   /**
    * Determines the current orientation (based on the rotation vector)
@@ -48,6 +48,8 @@ public:
    * @param height
    */
   void updateProjectionMatrix(const int width, const int height) override;
+
+  //TODO: Give FPSCamera ref to PlayableEntity and make it update the entity's positions when the camera has been updated.
 };
 
 #endif // FPSCAMERA_H

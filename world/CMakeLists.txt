@@ -11,9 +11,8 @@ set(SOURCE_FILES
     include/component.hpp
     include/typedcomponent.hpp
     include/componentlist.hpp
-    include/entity.hpp
+    include/entity.h src/entity.cpp
     include/transformationsystem.h src/transformationsystem.cpp
-    include/typedentity.hpp
     include/system.h
     include/typedsystem.hpp
     include/axis.h src/axis.cpp

@@ -4,12 +4,13 @@
 #include <memory>
 #include <vector>
 
-#include "entity.hpp"
+#include "entity.h"
 
 class System
 {
 public:
-  virtual void update(const float &delta, std::vector<std::unique_ptr<Entity>> &entities) = 0;
+  virtual ~System() {}
+  virtual void handle(const double &delta, std::vector<std::unique_ptr<Entity>> &entities) = 0;
 };
 
 #endif // SYSTEM_HPP

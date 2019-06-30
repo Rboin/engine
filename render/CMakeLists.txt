@@ -1,5 +1,6 @@
 project(game_render)
 
+set(CMAKE_CXX_STANDARD 14)
 set(OpenGL_GL_PREFERENCE GLVND)
 
 find_package(glm REQUIRED)
@@ -8,7 +9,7 @@ find_package(OpenGL REQUIRED)
 add_definitions(${OPENGL_DEFINITIONS})
 
 set(PUBLIC_HEADERS
-    include/camera.hpp
+    include/camera.h
     include/openglfunctionproxy.h
     include/renderer.h
     include/playableentity.h
@@ -24,7 +25,8 @@ set(PUBLIC_HEADERS
     include/pointlight.h
     include/directionallight.h
     include/rendercomponent.h
-    include/scene.h)
+    include/scene.h
+    )
 
 
 set(SOURCE_FILES
@@ -36,6 +38,7 @@ set(SOURCE_FILES
     src/renderer/material.cpp
     src/shader/shader.cpp
     src/shader/shaderinformation.cpp
+    src/camera/camera.cpp
     src/camera/fpscamera.cpp
     src/entities/playableentity.cpp
     src/renderer/lightrenderobject.cpp

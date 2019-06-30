@@ -50,16 +50,6 @@ void OpenGLWindow::setScene(Scene *scene)
   this->_scene = std::unique_ptr<Scene>(scene);
 }
 
-//void OpenGLWindow::setWorld(World *world)
-//{
-//  this->world = std::unique_ptr<World>(world);
-//}
-
-//void OpenGLWindow::setCamera(std::shared_ptr<Camera> camera)
-//{
-//  this->camera = camera;
-//}
-
 void OpenGLWindow::update()
 {
   long long elapsed = this->_elapsedTimer->nsecsElapsed();

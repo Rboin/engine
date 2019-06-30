@@ -9,7 +9,7 @@ class TypedComponent : public Component
 public:
   TypedComponent(OwnerId ownerId) : Component(ownerId)
   {
-    this->_id = TypeId<Component>::get<T>();
+    this->id = TypeId<Component>::get<T>();
   }
 };
 
