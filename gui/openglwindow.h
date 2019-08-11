@@ -1,21 +1,20 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
-#include <memory>
-#include <QWindow>
-#include <QTimer>
 #include <QElapsedTimer>
+#include <QTimer>
+#include <QWindow>
+#include <memory>
 
 #include "glm/glm.hpp"
 #include "qtopenglproxy.hpp"
-#include "world.h"
 #include "renderer.h"
 #include "scene.h"
+#include "world.h"
 
-class OpenGLWindow : public QWindow
-{
+class OpenGLWindow : public QWindow {
   Q_OBJECT
-public:
+ public:
   explicit OpenGLWindow(QWindow *parent = nullptr);
   OpenGLWindow(QWindow *parent, QSurfaceFormat f);
   ~OpenGLWindow() override;
@@ -24,15 +23,18 @@ public:
 
   void setRenderer(Renderer *renderer);
   void setScene(Scene *scene);
+  void setFunctions(std::shared_ptr<OpenGLFunctionProxy> openglProxy);
 
-  void createFunctionProxy();
-  void createShader();
+  OpenGLFunctionProxy *createFunctionProxy();
+  Shader *createShader(const std::string &vertexPath,
+                       const std::string &fragmentPath);
   void initializeTimer();
 
-public slots:
+ public slots:
   void update();
   void render();
-private:
+
+ private:
   long long _lastNanos;
   QPoint _center;
 
@@ -41,13 +43,14 @@ private:
   std::unique_ptr<QOpenGLContext> openglContext;
   std::unique_ptr<Renderer> _renderer;
   std::unique_ptr<Scene> _scene;
+  std::shared_ptr<OpenGLFunctionProxy> openglProxy;
 
   // QWindow interface
-protected:
+ protected:
   void resizeEvent(QResizeEvent *) override;
   void keyPressEvent(QKeyEvent *) override;
   void keyReleaseEvent(QKeyEvent *) override;
   void mouseMoveEvent(QMouseEvent *) override;
 };
 
-#endif // OPENGLWIDGET_H
+#endif  // OPENGLWIDGET_H

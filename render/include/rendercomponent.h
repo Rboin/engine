@@ -3,25 +3,22 @@
 
 #include <memory>
 
-#include <typedcomponent.hpp>
 #include <transformcomponent.h>
+#include <typedcomponent.hpp>
 
 #include "renderobject.h"
 
-class RenderComponent : public TypedComponent<RenderComponent>
-{
-public:
+class RenderComponent : public TypedComponent<RenderComponent> {
+ public:
   RenderComponent(OwnerId owner, RenderObjects::BaseRenderObject *r);
 
-  std::shared_ptr<RenderObjects::BaseRenderObject> getRenderObject();
+  RenderObjects::BaseRenderObject &getRenderObject();
 
-  void render(unsigned int program,
-              std::shared_ptr<OpenGLFunctionProxy> proxy,
-              Entity &entity,
-              const glm::mat4 &viewProjection);
+  void render(unsigned int program, std::shared_ptr<OpenGLFunctionProxy> proxy,
+              Entity &entity, const glm::mat4 &viewProjection);
 
-private:
+ private:
   std::shared_ptr<RenderObjects::BaseRenderObject> _renderObject;
 };
 
-#endif // RENDERCOMPONENT_H
+#endif  // RENDERCOMPONENT_H

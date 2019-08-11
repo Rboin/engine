@@ -1,11 +1,11 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <memory>
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
 
 #include "axis.h"
 #include "openglfunctionproxy.h"
@@ -27,13 +27,13 @@ struct view_information {
   glm::vec3 position, up, look, right;
 };
 
-class Camera
-{
-public:
+class Camera {
+ public:
   Camera(const projection_information &p, glm::vec3 position);
 
   /**
-   * Adds the given movement direction to the movement buffer. Can be undone using the Camera::undoMove(Direction) method.
+   * Adds the given movement direction to the movement buffer. Can be undone
+   * using the Camera::undoMove(Direction) method.
    * @brief move
    * @param direction
    */
@@ -64,11 +64,11 @@ public:
 
   void setPosition(glm::vec3 p);
 
-  glm::vec3 getPosition();
+  const glm::vec3 &getPosition() const;
 
   void setRotation(glm::vec3 r);
 
-  glm::mat4 &getViewMatrix();
+  const glm::mat4 &getViewMatrix();
 
   glm::mat4 &getProjectionMatrix();
 
@@ -79,11 +79,10 @@ public:
   virtual void updateViewMatrix() = 0;
   virtual void updateProjectionMatrix(const int width, const int height) = 0;
 
-protected:
+ protected:
   int _movement;
   float _fov, _near, _far;
-  glm::vec3 _position, _position_buffer,
-      _rotation, _rotation_buffer;
+  glm::vec3 _position, _position_buffer, _rotation, _rotation_buffer;
   glm::mat4 _view, _projection;
   std::shared_ptr<Axis> _axis;
 
@@ -96,4 +95,4 @@ protected:
   void updatePositionBuffer();
 };
 
-#endif // CAMERA_HPP
+#endif  // CAMERA_HPP

@@ -1,39 +1,39 @@
 #include "playableentity.h"
 
-PlayableEntity::PlayableEntity(std::shared_ptr<Camera> c) :
-  Entity()
-{
+PlayableEntity::PlayableEntity(std::shared_ptr<Camera> c) : Entity() {
   this->_camera = c;
 }
 
-PlayableEntity::~PlayableEntity()
-{
-    //
+PlayableEntity::~PlayableEntity() {
+  //
 }
 
-std::shared_ptr<Camera> &PlayableEntity::getCamera()
-{
-  return this->_camera;
-}
+std::shared_ptr<Camera> &PlayableEntity::getCamera() { return this->_camera; }
 
-//void PlayableEntity::update(const double delta)
+// void PlayableEntity::update(const double delta)
 //{
 //  this->_camera->update(delta);
 //}
 
-void PlayableEntity::setPosition(glm::vec3 p)
-{
-  this->getComponents()->getComponent<TransformComponent>()->setPosition(p);
+void PlayableEntity::setPosition(glm::vec3 p) {
+  ComponentMap &components = getComponents();
+  TransformComponent &transformComponent =
+      components.getComponent<TransformComponent>();
+  transformComponent.setPosition(p);
   this->_camera->setPosition(p);
 }
 
-void PlayableEntity::setRotation(glm::vec3 r)
-{
-  this->getComponents()->getComponent<TransformComponent>()->setRotation(r);
+void PlayableEntity::setRotation(glm::vec3 r) {
+  ComponentMap &components = getComponents();
+  TransformComponent &transformComponent =
+      components.getComponent<TransformComponent>();
+  transformComponent.setRotation(r);
   this->_camera->setRotation(-r);
 }
 
-void PlayableEntity::setScaling(glm::vec3 s)
-{
-  this->getComponents()->getComponent<TransformComponent>()->setScaling(s);
+void PlayableEntity::setScaling(glm::vec3 s) {
+  ComponentMap &components = getComponents();
+  TransformComponent &transformComponent =
+      components.getComponent<TransformComponent>();
+  transformComponent.setScaling(s);
 }

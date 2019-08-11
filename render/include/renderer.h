@@ -1,36 +1,36 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <memory>
 #include <glm/glm.hpp>
+#include <memory>
 
-#include "shader.h"
-#include "openglfunctionproxy.h"
-#include "world.h"
 #include "camera.h"
+#include "openglfunctionproxy.h"
 #include "rendercomponent.h"
 #include "scene.h"
+#include "shader.h"
+#include "world.h"
 
 typedef std::unique_ptr<Entity> UniqueEntityPtr;
 typedef std::vector<std::unique_ptr<Entity>> EntityVector;
 typedef std::vector<std::unique_ptr<Entity>>::iterator EntityVectorIterator;
 
-class Renderer
-{
-public:
+class Renderer {
+ public:
   Renderer();
   ~Renderer();
   bool hasFunctions();
   void setFunctions(std::shared_ptr<OpenGLFunctionProxy> f);
-  std::shared_ptr<OpenGLFunctionProxy> getFunctionProxy();
+  std::shared_ptr<OpenGLFunctionProxy> &getFunctionProxy();
   void initialize();
   void addShader(Shader *_shader);
 
   void render(std::unique_ptr<Scene> &scene);
-  void renderEntities(std::vector<std::unique_ptr<Entity> > &entities);
+  void renderEntities(std::vector<std::unique_ptr<Entity>> &entities);
   void renderLights(std::vector<std::unique_ptr<Entity>> &lights);
-  void renderEntity(std::unique_ptr<Entity> &entity);
-private:
+  void renderEntity(Entity &entity);
+
+ private:
   bool _initialized;
   int u_cameraPosition;
   GLuint _program;
@@ -39,4 +39,4 @@ private:
   std::shared_ptr<OpenGLFunctionProxy> _proxy;
 };
 
-#endif // RENDERER_H
+#endif  // RENDERER_H
